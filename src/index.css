@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=Zain:wght@300;400;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Zain", sans-serif;
+  --font-body: "Nunito", sans-serif;
+  --color-gold: #FF5C2B; /* Re-map gold to brand orange for automatic subpage color shifts */
+  --color-gold-light: #FF825C;
+  --color-gold-dark: #E04618;
+  --color-cream: #FAF7F2;
+  --color-charcoal: #111111;
+  --color-warm-gray: #7A7269;
+  --color-border: #ECE5DB;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Nunito", sans-serif;
+  background: #FAF7F2;
+  color: #111111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Font Override & Pairings */
+*, ::before, ::after {
+  font-family: "Nunito", sans-serif !important;
+}
+
+/* Headlines & Serif styling mapped to Zain font */
+h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 *, 
+.font-serif, .font-serif *, 
+[style*="font-family: 'Playfair Display'"], 
+[style*="fontFamily: 'Playfair Display'"],
+[style*="Playfair Display"] {
+  font-family: "Zain", sans-serif !important;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-panel-dark {
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #FAF7F2; }
+::-webkit-scrollbar-thumb { background: #FF5C2B; border-radius: 2px; }
+
+::selection { background: rgba(255,92,43,0.12); }
