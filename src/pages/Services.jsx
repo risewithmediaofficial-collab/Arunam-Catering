@@ -47,7 +47,7 @@ function ServiceSection({ service, i }) {
   return (
     <section
       key={service.id}
-      className="py-20 md:py-24"
+      className="py-20 md:py-24 overflow-hidden"
       style={{ background: i % 2 === 0 ? '#fff' : '#F8F4EE' }}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -69,7 +69,7 @@ function ServiceSection({ service, i }) {
             </div>
             {/* Stats badge */}
             <div
-              className="absolute -bottom-4 -right-4 flex"
+              className="absolute bottom-0 right-0 md:-bottom-4 md:-right-4 flex"
               style={{ background: '#181818' }}
             >
               {service.stats.map(s => (

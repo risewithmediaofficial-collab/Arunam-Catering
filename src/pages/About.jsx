@@ -113,7 +113,7 @@ export default function About() {
                 </div>
               </div>
               <div
-                className="absolute -bottom-4 -left-4 p-5 text-center"
+                className="absolute bottom-0 left-0 md:-bottom-4 md:-left-4 p-5 text-center"
                 style={{ background: '#FF5C2B' }}
               >
                 <p className="text-2xl font-semibold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>25+</p>
