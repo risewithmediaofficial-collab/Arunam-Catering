@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Local MongoDB instance bound to host port 27020
+  mongodb:
+    image: mongo:latest
+    container_name: arunam_mongodb
+    ports:
+      - "27020:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - arunam_network
+
+  # Node.js + Express API Backend Server
+  backend:
+    build: ./backend
+    container_name: arunam_backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/arunam
+      - PORT=5000
+    networks:
+      - arunam_network
+
+  # Nginx served React + Vite Frontend
+  frontend:
+    build: ./frontend
+    container_name: arunam_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - arunam_network
+
+volumes:
+  mongo_data:
+
+networks:
+  arunam_network:
+    driver: bridge
