@@ -29,7 +29,7 @@ services:
     build: ./frontend
     container_name: arunam_frontend
     ports:
-      - "80:80"
+      - "83:80"
     depends_on:
       - backend
     networks:
