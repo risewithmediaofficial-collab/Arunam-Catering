@@ -106,7 +106,7 @@ export default function Contact() {
                   <div>
                     <p className="text-[9.5px] tracking-[0.22em] uppercase mb-0.5" style={{ color: '#FF5C2B', fontFamily: 'Inter, sans-serif' }}>Address</p>
                     <address className="not-italic text-[0.88rem] text-[#181818] leading-[1.6]" style={{ fontFamily: 'Inter, sans-serif' }}>
-                      No: 163/A, Erukkencheri High Road,<br />Sharma Nagar, Perambur,<br />Chennai – 600039
+                      Krishnagiri
                     </address>
                   </div>
                 </div>
@@ -262,10 +262,10 @@ export default function Contact() {
         <div className="text-center">
           <MapPin size={28} style={{ color: '#FF5C2B', margin: '0 auto 10px' }} />
           <p className="text-[0.83rem] text-[#6B6560] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-            No: 163/A, Erukkencheri High Road, Sharma Nagar, Perambur, Chennai – 600039
+            Krishnagiri
           </p>
           <a
-            href="https://maps.google.com/?q=Erukkencheri+High+Road+Sharma+Nagar+Perambur+Chennai"
+            href="https://maps.google.com/?q=Krishnagiri"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[10.5px] tracking-[0.2em] uppercase font-semibold pb-px"

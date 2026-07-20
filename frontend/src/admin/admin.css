@@ -1,0 +1,102 @@
+/* Arunam Admin Stylesheet - Light Premium Theme */
+
+@layer utilities {
+  .admin-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .admin-scrollbar::-webkit-scrollbar-track {
+    background: #f7f7f7;
+  }
+  .admin-scrollbar::-webkit-scrollbar-thumb {
+    background: #FF5C2B;
+    border-radius: 3px;
+  }
+}
+
+.admin-body {
+  background-color: #fcfbfa;
+  color: #2d2a29;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Premium Light Cards */
+.admin-card {
+  background: #ffffff;
+  border: 1px solid #eae5df;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+}
+
+/* Custom inputs for light mode form */
+.admin-input {
+  background: #ffffff;
+  border: 1px solid #d1c9bf;
+  color: #1a1a1a;
+  border-radius: 8px;
+  padding: 0.625rem 0.88rem;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+
+.admin-input:focus {
+  border-color: #FF5C2B;
+  box-shadow: 0 0 0 3px rgba(255, 92, 43, 0.15);
+}
+
+.admin-btn-primary {
+  background-color: #FF5C2B;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 92, 43, 0.2);
+}
+
+.admin-btn-primary:hover {
+  background-color: #e04618;
+  box-shadow: 0 6px 16px rgba(255, 92, 43, 0.3);
+}
+
+.admin-btn-secondary {
+  background-color: #ffffff;
+  border: 1px solid #d1c9bf;
+  color: #5c5552;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-btn-secondary:hover {
+  background-color: #fcfbfa;
+  border-color: #bfae9e;
+  color: #1a1a1a;
+}
+
+/* Print Specific Overrides */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-area, #print-area * {
+    visibility: visible;
+  }
+  #print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

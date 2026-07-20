@@ -115,6 +115,23 @@ export default function Hero() {
         </motion.div>
       ))}
 
+      {/* Floating Cartoon Chef Mascot (Left) */}
+      <motion.div
+        className="absolute bottom-[10%] left-[2%] w-24 h-24 md:w-34 md:h-34 xl:w-40 xl:h-40 z-20 hidden md:block"
+        animate={{ y: [0, -10, 0], rotate: [0, 2, 0] }}
+        transition={{
+          repeat: Infinity,
+          duration: 6,
+          ease: "easeInOut"
+        }}
+      >
+        <img
+          src="/chef_cartoon_vector.png"
+          alt="Cartoon Chef Mascot"
+          className="w-full h-full object-contain"
+        />
+      </motion.div>
+
       {/* Hero Content */}
       <div className="relative z-20 max-w-4xl mx-auto px-6 text-center pt-8 pb-10">
 

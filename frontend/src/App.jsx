@@ -10,6 +10,7 @@ import Gallery from './pages/Gallery'
 import Testimonials from './pages/Testimonials'
 import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
+import AdminApp from './admin/AdminApp'
 
 // Scroll to top on route change
 function ScrollToTop() {
@@ -63,7 +64,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Layout />
+      <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="*" element={<Layout />} />
+      </Routes>
     </BrowserRouter>
   )
 }

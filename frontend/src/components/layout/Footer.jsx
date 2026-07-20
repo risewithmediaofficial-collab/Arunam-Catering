@@ -202,9 +202,7 @@ export default function Footer() {
                 <div className="flex items-start gap-3 text-[0.83rem] text-[#7A7269]" style={{ fontFamily: 'Inter, sans-serif' }}>
                   <MapPin size={13} className="mt-0.5 shrink-0" style={{ color: '#FF5C2B' }} />
                   <address className="not-italic leading-[1.6]">
-                    No: 163/A, Erukkencheri High Road,<br />
-                    Sharma Nagar, Perambur,<br />
-                    Chennai – 600039
+                    Krishnagiri
                   </address>
                 </div>
               </li>
