@@ -4,6 +4,7 @@ import AdminLayout from './AdminLayout';
 import AdminDashboard from './AdminDashboard';
 import BillForm from './BillForm';
 import BillPrint from './BillPrint';
+import AdminCustomers from './AdminCustomers';
 
 export default function AdminApp() {
   return (
@@ -30,6 +31,14 @@ export default function AdminApp() {
         element={
           <AdminLayout>
             <BillForm />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="customers"
+        element={
+          <AdminLayout>
+            <AdminCustomers />
           </AdminLayout>
         }
       />

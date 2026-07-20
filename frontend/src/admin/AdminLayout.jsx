@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { isLoggedIn, logout, getAdminName } from './adminAuth';
-import { LayoutDashboard, FileSpreadsheet, LogOut, Menu, X, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, FileSpreadsheet, Users, LogOut, Menu, X, ArrowLeft } from 'lucide-react';
 import './admin.css';
 
 export default function AdminLayout({ children }) {
@@ -34,6 +34,11 @@ export default function AdminLayout({ children }) {
       name: 'New Bill',
       path: '/admin/bill/new',
       icon: FileSpreadsheet,
+    },
+    {
+      name: 'Customers',
+      path: '/admin/customers',
+      icon: Users,
     },
   ];
 

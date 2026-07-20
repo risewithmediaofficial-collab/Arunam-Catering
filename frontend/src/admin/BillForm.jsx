@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { Save, Plus, Trash2, ArrowLeft, PlusCircle, Upload, Check, Info } from 'lucide-react';
-import { getBillById, saveBill, getBills } from './adminStore';
+import { Save, Plus, Trash2, ArrowLeft, PlusCircle, Upload, Check, Info, Users, Search } from 'lucide-react';
+import { getBillById, saveBill, getBills, getCustomers } from './adminStore';
+import { TIFFIN_MENUS, LUNCH_MENUS, DINNER_MENUS, SMART_CHOICE_MENUS, CATEGORY_MENUS } from './presetMenus';
 import * as XLSX from 'xlsx';
 import './admin.css';
 
@@ -42,6 +43,19 @@ export default function BillForm() {
   const [status, setStatus] = useState('Draft');
   const [notes, setNotes] = useState('Thank you for choosing Arunam Catering.');
 
+  // Customers for autofill dropdown
+  const [customersList, setCustomersList] = useState([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
+
+  // Search filter query for each session list
+  const [searchQueries, setSearchQueries] = useState({ breakfast: '', lunch: '', dinner: '', stalls: '' });
+
+  // Payment Log / Ledger
+  const [advancePaid, setAdvancePaid] = useState(0);
+  const [advancePaidDate, setAdvancePaidDate] = useState('');
+  const [amountPaid, setAmountPaid] = useState(0);
+  const [amountPaidDate, setAmountPaidDate] = useState('');
+
   // Menu options (Excel templates get imported here)
   const [menuOptions, setMenuOptions] = useState(DEFAULT_MENU_OPTIONS);
 
@@ -79,6 +93,10 @@ export default function BillForm() {
   // Load existing bill if editing
   useEffect(() => {
     async function loadData() {
+      // Load customers directory list
+      const clist = await getCustomers();
+      setCustomersList(clist);
+
       if (isEditMode) {
         const existing = await getBillById(id);
         if (existing) {
@@ -123,6 +141,12 @@ export default function BillForm() {
           if (existing.menuOptions) {
             setMenuOptions(existing.menuOptions);
           }
+
+          // Payment log recovery
+          setAdvancePaid(existing.advancePaid || 0);
+          setAdvancePaidDate(existing.advancePaidDate || '');
+          setAmountPaid(existing.amountPaid || 0);
+          setAmountPaidDate(existing.amountPaidDate || '');
         } else {
           alert('Bill not found!');
           navigate('/admin');
@@ -351,6 +375,98 @@ export default function BillForm() {
     setExtraCharges(extraCharges.filter((c) => c.id !== chargeId));
   };
 
+  const handleCustomerSelect = (customerId) => {
+    setSelectedCustomerId(customerId);
+    if (!customerId) {
+      setCustomerName('');
+      setCustomerMobile('');
+      setCustomerAddress('');
+      setCustomerEmail('');
+      return;
+    }
+    const customer = customersList.find(c => c._id === customerId);
+    if (customer) {
+      setCustomerName(customer.name || '');
+      setCustomerMobile(customer.mobile || '');
+      setCustomerAddress(customer.address || '');
+      setCustomerEmail(customer.email || '');
+    }
+  };
+
+  const handleApplyPreset = (session, selection) => {
+    if (!selection) return;
+
+    if (selection.startsWith('cat:')) {
+      const catKey = selection.substring(4);
+      const items = CATEGORY_MENUS[catKey] || [];
+      setMenuOptions(prev => {
+        const currentOptions = prev[session] || [];
+        const merged = Array.from(new Set([...currentOptions, ...items]));
+        return { ...prev, [session]: merged };
+      });
+    } else {
+      let items = [];
+      if (selection.startsWith('tiffin:')) {
+        items = TIFFIN_MENUS[selection.substring(7)] || [];
+      } else if (selection.startsWith('lunch:')) {
+        items = LUNCH_MENUS[selection.substring(6)] || [];
+      } else if (selection.startsWith('dinner:')) {
+        items = DINNER_MENUS[selection.substring(7)] || [];
+      } else if (selection.startsWith('smart:')) {
+        items = SMART_CHOICE_MENUS[selection.substring(6)] || [];
+      }
+
+      if (items.length > 0) {
+        setMenuOptions(prev => {
+          const currentOptions = prev[session] || [];
+          const merged = Array.from(new Set([...currentOptions, ...items]));
+          return { ...prev, [session]: merged };
+        });
+
+        if (session === 'breakfast') {
+          setSelectedBreakfastDishes(items);
+        } else if (session === 'lunch') {
+          setSelectedLunchDishes(items);
+        } else if (session === 'dinner') {
+          setSelectedDinnerDishes(items);
+        }
+      }
+    }
+  };
+
+  const handleApplyStallPreset = (stallId, selection) => {
+    if (!selection) return;
+
+    let items = [];
+    if (selection.startsWith('cat:')) {
+      items = CATEGORY_MENUS[selection.substring(4)] || [];
+    } else if (selection.startsWith('tiffin:')) {
+      items = TIFFIN_MENUS[selection.substring(7)] || [];
+    } else if (selection.startsWith('lunch:')) {
+      items = LUNCH_MENUS[selection.substring(6)] || [];
+    } else if (selection.startsWith('dinner:')) {
+      items = DINNER_MENUS[selection.substring(7)] || [];
+    } else if (selection.startsWith('smart:')) {
+      items = SMART_CHOICE_MENUS[selection.substring(6)] || [];
+    }
+
+    if (items.length > 0) {
+      setMenuOptions(prev => {
+        const currentOptions = prev.stalls || [];
+        const merged = Array.from(new Set([...currentOptions, ...items]));
+        return { ...prev, stalls: merged };
+      });
+
+      setStalls(prev => prev.map(s => {
+        if (s.id === stallId) {
+          const mergedDishes = Array.from(new Set([...s.selectedDishes, ...items]));
+          return { ...s, selectedDishes: mergedDishes };
+        }
+        return s;
+      }));
+    }
+  };
+
   // Submit Invoice Form
   const handleSave = async (e) => {
     e.preventDefault();
@@ -360,6 +476,7 @@ export default function BillForm() {
     }
 
     const finalFunctionType = functionType === 'Other Custom Function' ? customFunctionType : functionType;
+    const balancePending = Math.max(0, grandTotal - (Number(advancePaid) || 0) - (Number(amountPaid) || 0));
 
     const billData = {
       id: id || undefined,
@@ -404,7 +521,14 @@ export default function BillForm() {
       subtotal,
       gstPercent,
       gstAmount,
-      grandTotal
+      grandTotal,
+
+      // Payment Log
+      advancePaid: Number(advancePaid) || 0,
+      advancePaidDate,
+      amountPaid: Number(amountPaid) || 0,
+      amountPaidDate,
+      balancePending
     };
 
     const saved = await saveBill(billData);
@@ -462,6 +586,28 @@ export default function BillForm() {
               <span className="w-6 h-6 rounded-full bg-[#FF5C2B]/10 text-[#FF5C2B] text-xs flex items-center justify-center font-bold">1</span>
               Customer & Event Information
             </h2>
+
+            {/* Quick Customer Select Dropdown */}
+            {customersList.length > 0 && (
+              <div className="flex flex-col border-b border-gray-100 pb-4 mb-2">
+                <label className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-[#FF5C2B]" />
+                  Select Existing Customer (Autofill details)
+                </label>
+                <select
+                  value={selectedCustomerId}
+                  onChange={(e) => handleCustomerSelect(e.target.value)}
+                  className="admin-input py-2 text-sm cursor-pointer"
+                >
+                  <option value="">-- Choose Customer --</option>
+                  {customersList.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name} ({c.mobile})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col">
@@ -621,29 +767,104 @@ export default function BillForm() {
                     </div>
                   </div>
 
+                  {/* Preset load dropdown */}
+                  <div className="flex flex-col space-y-1.5">
+                    <label className="text-[11px] text-gray-400 font-semibold uppercase block">Load Preset Package / Category</label>
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        handleApplyPreset('breakfast', e.target.value);
+                        e.target.value = '';
+                      }}
+                      className="admin-input py-1.5 text-xs cursor-pointer bg-white"
+                    >
+                      <option value="">-- Select Preset Package or Category --</option>
+                      <optgroup label="Tiffin Packages (Tiffin 1 - 20)">
+                        {Object.keys(TIFFIN_MENUS).map(k => (
+                          <option key={k} value={`tiffin:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Lunch Packages (Lunch 1 - 20)">
+                        {Object.keys(LUNCH_MENUS).map(k => (
+                          <option key={k} value={`lunch:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Dinner Packages (Dinner 1 - 26)">
+                        {Object.keys(DINNER_MENUS).map(k => (
+                          <option key={k} value={`dinner:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Smart Choice Packages (M1 - M5)">
+                        {Object.keys(SMART_CHOICE_MENUS).map(k => (
+                          <option key={k} value={`smart:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Custom Menu Categories (Adds options to checklist)">
+                        {Object.keys(CATEGORY_MENUS).map(k => (
+                          <option key={k} value={`cat:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+
                   {/* Dishes select list */}
-                  <div>
-                    <label className="text-[11px] text-gray-400 font-semibold uppercase block mb-2">Select Dishes from templates</label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] text-gray-400 font-semibold uppercase block">Select Dishes from templates</label>
+                      {selectedBreakfastDishes.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedBreakfastDishes([])}
+                          className="text-[10px] text-red-500 hover:text-red-700 font-bold uppercase tracking-wider bg-transparent border-0 cursor-pointer"
+                        >
+                          Clear Selection
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-400">
+                        <Search className="w-3.5 h-3.5" />
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Search dishes in template list..."
+                        value={searchQueries.breakfast}
+                        onChange={(e) => setSearchQueries({ ...searchQueries, breakfast: e.target.value })}
+                        className="w-full admin-input pl-8 py-1.5 text-xs"
+                      />
+                    </div>
+
                     <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white divide-y divide-gray-100 admin-scrollbar">
-                      {menuOptions.breakfast.map((dish) => {
-                        const isSelected = selectedBreakfastDishes.includes(dish);
-                        return (
-                          <div
-                            key={dish}
-                            onClick={() => toggleDishSelection('breakfast', dish)}
-                            className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
-                          >
-                            <span className="text-xs text-gray-700">{dish}</span>
-                            <div
-                              className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
-                              }`}
-                            >
-                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {menuOptions.breakfast.filter(dish =>
+                        dish.toLowerCase().includes(searchQueries.breakfast.toLowerCase())
+                      ).length === 0 ? (
+                        <div className="py-4 text-center text-gray-400 text-xs italic">
+                          No matching dishes. Type custom dish below to add manually.
+                        </div>
+                      ) : (
+                        menuOptions.breakfast
+                          .filter(dish => dish.toLowerCase().includes(searchQueries.breakfast.toLowerCase()))
+                          .map((dish) => {
+                            const isSelected = selectedBreakfastDishes.includes(dish);
+                            return (
+                              <div
+                                key={dish}
+                                onClick={() => toggleDishSelection('breakfast', dish)}
+                                className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
+                              >
+                                <span className="text-xs text-gray-700">{dish}</span>
+                                <div
+                                  className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                    isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                              </div>
+                            );
+                          })
+                      )}
                     </div>
 
                     {/* Manual add input */}
@@ -716,29 +937,104 @@ export default function BillForm() {
                     </div>
                   </div>
 
+                  {/* Preset load dropdown */}
+                  <div className="flex flex-col space-y-1.5">
+                    <label className="text-[11px] text-gray-400 font-semibold uppercase block">Load Preset Package / Category</label>
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        handleApplyPreset('lunch', e.target.value);
+                        e.target.value = '';
+                      }}
+                      className="admin-input py-1.5 text-xs cursor-pointer bg-white"
+                    >
+                      <option value="">-- Select Preset Package or Category --</option>
+                      <optgroup label="Tiffin Packages (Tiffin 1 - 20)">
+                        {Object.keys(TIFFIN_MENUS).map(k => (
+                          <option key={k} value={`tiffin:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Lunch Packages (Lunch 1 - 20)">
+                        {Object.keys(LUNCH_MENUS).map(k => (
+                          <option key={k} value={`lunch:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Dinner Packages (Dinner 1 - 26)">
+                        {Object.keys(DINNER_MENUS).map(k => (
+                          <option key={k} value={`dinner:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Smart Choice Packages (M1 - M5)">
+                        {Object.keys(SMART_CHOICE_MENUS).map(k => (
+                          <option key={k} value={`smart:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Custom Menu Categories (Adds options to checklist)">
+                        {Object.keys(CATEGORY_MENUS).map(k => (
+                          <option key={k} value={`cat:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+
                   {/* Dishes select list */}
-                  <div>
-                    <label className="text-[11px] text-gray-400 font-semibold uppercase block mb-2">Select Dishes from templates</label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] text-gray-400 font-semibold uppercase block">Select Dishes from templates</label>
+                      {selectedLunchDishes.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLunchDishes([])}
+                          className="text-[10px] text-red-500 hover:text-red-700 font-bold uppercase tracking-wider bg-transparent border-0 cursor-pointer"
+                        >
+                          Clear Selection
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-400">
+                        <Search className="w-3.5 h-3.5" />
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Search dishes in template list..."
+                        value={searchQueries.lunch}
+                        onChange={(e) => setSearchQueries({ ...searchQueries, lunch: e.target.value })}
+                        className="w-full admin-input pl-8 py-1.5 text-xs"
+                      />
+                    </div>
+
                     <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white divide-y divide-gray-100 admin-scrollbar">
-                      {menuOptions.lunch.map((dish) => {
-                        const isSelected = selectedLunchDishes.includes(dish);
-                        return (
-                          <div
-                            key={dish}
-                            onClick={() => toggleDishSelection('lunch', dish)}
-                            className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
-                          >
-                            <span className="text-xs text-gray-700">{dish}</span>
-                            <div
-                              className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
-                              }`}
-                            >
-                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {menuOptions.lunch.filter(dish =>
+                        dish.toLowerCase().includes(searchQueries.lunch.toLowerCase())
+                      ).length === 0 ? (
+                        <div className="py-4 text-center text-gray-400 text-xs italic">
+                          No matching dishes. Type custom dish below to add manually.
+                        </div>
+                      ) : (
+                        menuOptions.lunch
+                          .filter(dish => dish.toLowerCase().includes(searchQueries.lunch.toLowerCase()))
+                          .map((dish) => {
+                            const isSelected = selectedLunchDishes.includes(dish);
+                            return (
+                              <div
+                                key={dish}
+                                onClick={() => toggleDishSelection('lunch', dish)}
+                                className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
+                              >
+                                <span className="text-xs text-gray-700">{dish}</span>
+                                <div
+                                  className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                    isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                              </div>
+                            );
+                          })
+                      )}
                     </div>
 
                     {/* Manual add input */}
@@ -811,29 +1107,104 @@ export default function BillForm() {
                     </div>
                   </div>
 
+                  {/* Preset load dropdown */}
+                  <div className="flex flex-col space-y-1.5">
+                    <label className="text-[11px] text-gray-400 font-semibold uppercase block">Load Preset Package / Category</label>
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        handleApplyPreset('dinner', e.target.value);
+                        e.target.value = '';
+                      }}
+                      className="admin-input py-1.5 text-xs cursor-pointer bg-white"
+                    >
+                      <option value="">-- Select Preset Package or Category --</option>
+                      <optgroup label="Tiffin Packages (Tiffin 1 - 20)">
+                        {Object.keys(TIFFIN_MENUS).map(k => (
+                          <option key={k} value={`tiffin:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Lunch Packages (Lunch 1 - 20)">
+                        {Object.keys(LUNCH_MENUS).map(k => (
+                          <option key={k} value={`lunch:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Dinner Packages (Dinner 1 - 26)">
+                        {Object.keys(DINNER_MENUS).map(k => (
+                          <option key={k} value={`dinner:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Smart Choice Packages (M1 - M5)">
+                        {Object.keys(SMART_CHOICE_MENUS).map(k => (
+                          <option key={k} value={`smart:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Custom Menu Categories (Adds options to checklist)">
+                        {Object.keys(CATEGORY_MENUS).map(k => (
+                          <option key={k} value={`cat:${k}`}>{k}</option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+
                   {/* Dishes select list */}
-                  <div>
-                    <label className="text-[11px] text-gray-400 font-semibold uppercase block mb-2">Select Dishes from templates</label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] text-gray-400 font-semibold uppercase block">Select Dishes from templates</label>
+                      {selectedDinnerDishes.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDinnerDishes([])}
+                          className="text-[10px] text-red-500 hover:text-red-700 font-bold uppercase tracking-wider bg-transparent border-0 cursor-pointer"
+                        >
+                          Clear Selection
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-400">
+                        <Search className="w-3.5 h-3.5" />
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Search dishes in template list..."
+                        value={searchQueries.dinner}
+                        onChange={(e) => setSearchQueries({ ...searchQueries, dinner: e.target.value })}
+                        className="w-full admin-input pl-8 py-1.5 text-xs"
+                      />
+                    </div>
+
                     <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white divide-y divide-gray-100 admin-scrollbar">
-                      {menuOptions.dinner.map((dish) => {
-                        const isSelected = selectedDinnerDishes.includes(dish);
-                        return (
-                          <div
-                            key={dish}
-                            onClick={() => toggleDishSelection('dinner', dish)}
-                            className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
-                          >
-                            <span className="text-xs text-gray-700">{dish}</span>
-                            <div
-                              className={`w-4 h-4 rounded border flex items-center justify-center ${
-                                isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
-                              }`}
-                            >
-                              {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {menuOptions.dinner.filter(dish =>
+                        dish.toLowerCase().includes(searchQueries.dinner.toLowerCase())
+                      ).length === 0 ? (
+                        <div className="py-4 text-center text-gray-400 text-xs italic">
+                          No matching dishes. Type custom dish below to add manually.
+                        </div>
+                      ) : (
+                        menuOptions.dinner
+                          .filter(dish => dish.toLowerCase().includes(searchQueries.dinner.toLowerCase()))
+                          .map((dish) => {
+                            const isSelected = selectedDinnerDishes.includes(dish);
+                            return (
+                              <div
+                                key={dish}
+                                onClick={() => toggleDishSelection('dinner', dish)}
+                                className="flex items-center justify-between py-2 px-1 cursor-pointer hover:bg-gray-50 transition-colors"
+                              >
+                                <span className="text-xs text-gray-700">{dish}</span>
+                                <div
+                                  className={`w-4 h-4 rounded border flex items-center justify-center ${
+                                    isSelected ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white' : 'border-gray-300'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                              </div>
+                            );
+                          })
+                      )}
                     </div>
 
                     {/* Manual add input */}
@@ -974,28 +1345,106 @@ export default function BillForm() {
                             </div>
                           </div>
                         )}
-                            {/* Stall items select panel */}
-                      <div className="space-y-2">
-                        <label className="text-[11px] text-gray-400 font-semibold uppercase block">Select Menu for Stalls</label>
-                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white admin-scrollbar">
-                          {menuOptions.stalls.map((dish) => {
-                            const isSelected = stall.selectedDishes.includes(dish);
-                            return (
-                              <button
-                                type="button"
-                                key={dish}
-                                onClick={() => toggleStallDish(stall.id, dish)}
-                                className={`text-[11px] px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                                  isSelected
-                                    ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white'
-                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-                                }`}
-                              >
-                                {dish}
-                              </button>
-                            );
-                          })}
+                      {/* Stall items select panel */}
+                      <div className="space-y-2 col-span-1 sm:col-span-3 border-t border-gray-150 pt-3 mt-1">
+                        {/* Quick load presets dropdown */}
+                        <div className="flex flex-col space-y-1">
+                          <label className="text-[10px] text-gray-500 font-bold uppercase">Load Preset Package / Category (Adds items to Stall)</label>
+                          <select
+                            value=""
+                            onChange={(e) => {
+                              handleApplyStallPreset(stall.id, e.target.value);
+                              e.target.value = '';
+                            }}
+                            className="admin-input py-1 text-xs cursor-pointer bg-white"
+                          >
+                            <option value="">-- Select Preset Package or Category --</option>
+                            <optgroup label="Tiffin Packages">
+                              {Object.keys(TIFFIN_MENUS).map(k => (
+                                <option key={k} value={`tiffin:${k}`}>{k}</option>
+                              ))}
+                            </optgroup>
+                            <optgroup label="Lunch Packages">
+                              {Object.keys(LUNCH_MENUS).map(k => (
+                                <option key={k} value={`lunch:${k}`}>{k}</option>
+                              ))}
+                            </optgroup>
+                            <optgroup label="Dinner Packages">
+                              {Object.keys(DINNER_MENUS).map(k => (
+                                <option key={k} value={`dinner:${k}`}>{k}</option>
+                              ))}
+                            </optgroup>
+                            <optgroup label="Smart Choice Packages">
+                              {Object.keys(SMART_CHOICE_MENUS).map(k => (
+                                <option key={k} value={`smart:${k}`}>{k}</option>
+                              ))}
+                            </optgroup>
+                            <optgroup label="Custom Categories">
+                              {Object.keys(CATEGORY_MENUS).map(k => (
+                                <option key={k} value={`cat:${k}`}>{k}</option>
+                              ))}
+                            </optgroup>
+                          </select>
                         </div>
+
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] text-gray-400 font-semibold uppercase block">Select Menu for Stalls</label>
+                          {stall.selectedDishes.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setStalls(prev => prev.map(s => s.id === stall.id ? { ...s, selectedDishes: [] } : s));
+                              }}
+                              className="text-[10px] text-red-500 hover:text-red-700 font-bold uppercase tracking-wider bg-transparent border-0 cursor-pointer"
+                            >
+                              Clear Selection
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="relative">
+                          <span className="absolute inset-y-0 left-0 pl-2 flex items-center text-gray-400">
+                            <Search className="w-3.5 h-3.5" />
+                          </span>
+                          <input
+                            type="text"
+                            placeholder="Search stall template items..."
+                            value={searchQueries.stalls}
+                            onChange={(e) => setSearchQueries({ ...searchQueries, stalls: e.target.value })}
+                            className="w-full admin-input pl-7.5 py-1 text-xs"
+                          />
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white admin-scrollbar">
+                          {menuOptions.stalls.filter(dish =>
+                            dish.toLowerCase().includes(searchQueries.stalls.toLowerCase())
+                          ).length === 0 ? (
+                            <div className="py-2 text-center text-gray-400 text-xs italic w-full">
+                              No matching stall items. Type below to add manually.
+                            </div>
+                          ) : (
+                            menuOptions.stalls
+                              .filter(dish => dish.toLowerCase().includes(searchQueries.stalls.toLowerCase()))
+                              .map((dish) => {
+                                const isSelected = stall.selectedDishes.includes(dish);
+                                return (
+                                  <button
+                                    type="button"
+                                    key={dish}
+                                    onClick={() => toggleStallDish(stall.id, dish)}
+                                    className={`text-[11px] px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
+                                      isSelected
+                                        ? 'bg-[#FF5C2B] border-[#FF5C2B] text-white font-medium'
+                                        : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                                    }`}
+                                  >
+                                    {dish}
+                                  </button>
+                                );
+                              })
+                          )}
+                        </div>
+
                         {/* Manual Add Input for Stall Items */}
                         <div className="flex items-center gap-2 mt-2">
                           <input
@@ -1010,14 +1459,12 @@ export default function BillForm() {
                               const input = document.getElementById(`stall-add-${stall.id}`);
                               const val = input ? input.value.trim() : '';
                               if (val) {
-                                // Add to presets if not there
                                 if (!menuOptions.stalls.includes(val)) {
                                   setMenuOptions((prev) => ({
                                     ...prev,
                                     stalls: [...prev.stalls, val]
                                   }));
                                 }
-                                // Select it for this stall
                                 toggleStallDish(stall.id, val);
                                 if (input) input.value = '';
                               }
@@ -1204,6 +1651,74 @@ export default function BillForm() {
                 <span className="text-2xl font-black text-[#FF5C2B]">
                   ₹{grandTotal.toLocaleString('en-IN')}
                 </span>
+              </div>
+
+              {/* Payment Log Ledger */}
+              <div className="border-t-2 border-dashed border-gray-250 pt-4 space-y-4">
+                <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Payment Ledger log</h3>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col">
+                    <label className="text-[10px] text-gray-500 font-bold mb-1">Advance Paid (₹)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={advancePaid}
+                      onChange={(e) => setAdvancePaid(Number(e.target.value))}
+                      className="admin-input py-1 text-xs text-right font-medium"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-[10px] text-gray-500 font-bold mb-1">Advance Date</label>
+                    <input
+                      type="date"
+                      value={advancePaidDate}
+                      onChange={(e) => setAdvancePaidDate(e.target.value)}
+                      className="admin-input py-1 text-xs font-medium cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col">
+                    <label className="text-[10px] text-gray-500 font-bold mb-1">Next Payment (₹)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={amountPaid}
+                      onChange={(e) => setAmountPaid(Number(e.target.value))}
+                      className="admin-input py-1 text-xs text-right font-medium"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-[10px] text-gray-500 font-bold mb-1">Next Pay Date</label>
+                    <input
+                      type="date"
+                      value={amountPaidDate}
+                      onChange={(e) => setAmountPaidDate(e.target.value)}
+                      className="admin-input py-1 text-xs font-medium cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-250 space-y-1.5">
+                  <div className="flex justify-between text-xs text-gray-600">
+                    <span>Total Paid</span>
+                    <span className="font-semibold text-gray-800">
+                      ₹{((Number(advancePaid) || 0) + (Number(amountPaid) || 0)).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline pt-1.5 border-t border-gray-200">
+                    <span className="text-xs font-bold text-gray-700">Balance Pending</span>
+                    <span className={`text-base font-black ${
+                      (grandTotal - (Number(advancePaid) || 0) - (Number(amountPaid) || 0)) > 0
+                        ? 'text-[#FF5C2B]'
+                        : 'text-green-600'
+                    }`}>
+                      ₹{Math.max(0, grandTotal - (Number(advancePaid) || 0) - (Number(amountPaid) || 0)).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 

@@ -84,3 +84,61 @@ export function getBillFilename(bill) {
   const date = bill.eventDate ? bill.eventDate.split('T')[0] : 'date';
   return `Arunam_Bill_SNo_${bill.sno}_${name}_${date}.pdf`;
 }
+
+// ─────────────────────────────────────────────
+// CUSTOMER API HELPERS (MongoDB API)
+// ─────────────────────────────────────────────
+
+const CUSTOMERS_API_URL = isDev
+  ? 'http://localhost:5000/api/customers'
+  : `${window.location.protocol}//${window.location.hostname}:5002/api/customers`;
+
+/**
+ * Fetch all customers sorted alphabetically from MongoDB server
+ */
+export async function getCustomers() {
+  try {
+    const res = await fetch(CUSTOMERS_API_URL);
+    if (!res.ok) throw new Error('Failed to fetch customers');
+    return await res.json();
+  } catch (e) {
+    console.error('Error reading customers from MongoDB backend:', e);
+    return [];
+  }
+}
+
+/**
+ * Save or update a customer in MongoDB server
+ */
+export async function saveCustomer(customerData) {
+  try {
+    const res = await fetch(CUSTOMERS_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(customerData),
+    });
+    if (!res.ok) throw new Error('Failed to save customer');
+    return await res.json();
+  } catch (e) {
+    console.error('Error saving customer to MongoDB backend:', e);
+    return null;
+  }
+}
+
+/**
+ * Delete a customer by ID in MongoDB server
+ */
+export async function deleteCustomer(id) {
+  try {
+    const res = await fetch(`${CUSTOMERS_API_URL}/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete customer');
+    return true;
+  } catch (e) {
+    console.error('Error deleting customer from MongoDB backend:', e);
+    return false;
+  }
+}

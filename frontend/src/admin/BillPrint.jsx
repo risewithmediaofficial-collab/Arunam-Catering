@@ -410,6 +410,41 @@ export default function BillPrint() {
                   ₹{(bill.grandTotal || 0).toLocaleString('en-IN')}
                 </span>
               </div>
+
+              {/* Payment Log Ledger Summary */}
+              <div className="border-t-2 border-dashed border-gray-200 pt-3 mt-3 space-y-1.5 text-gray-500">
+                <p className="text-[10px] font-bold uppercase text-gray-400 mb-1">Receipt & Ledger Summary</p>
+                
+                {(bill.advancePaid || 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span>Advance Amount Paid{bill.advancePaidDate ? ` (on ${bill.advancePaidDate.split('T')[0]})` : ''}:</span>
+                    <span>₹{(bill.advancePaid || 0).toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+                
+                {(bill.amountPaid || 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span>Next Amount Paid{bill.amountPaidDate ? ` (on ${bill.amountPaidDate.split('T')[0]})` : ''}:</span>
+                    <span>₹{(bill.amountPaid || 0).toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between border-t border-gray-100 pt-1 font-semibold text-gray-700">
+                  <span>Total Amount Paid:</span>
+                  <span>₹{((bill.advancePaid || 0) + (bill.amountPaid || 0)).toLocaleString('en-IN')}</span>
+                </div>
+
+                <div className="border-t border-gray-200 pt-2 flex justify-between items-baseline">
+                  <span className="text-xs font-bold text-gray-800">Balance Pending:</span>
+                  <span className={`text-base font-black ${
+                    (bill.grandTotal - (bill.advancePaid || 0) - (bill.amountPaid || 0)) > 0
+                      ? 'text-[#FF5C2B]'
+                      : 'text-green-600'
+                  }`}>
+                    ₹{Math.max(0, bill.grandTotal - (bill.advancePaid || 0) - (bill.amountPaid || 0)).toLocaleString('en-IN')}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

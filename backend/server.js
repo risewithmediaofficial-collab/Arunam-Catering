@@ -60,11 +60,31 @@ const billSchema = new mongoose.Schema(
     gstPercent: Number,
     gstAmount: Number,
     grandTotal: Number,
+    
+    // Payment Log/Ledger
+    advancePaid: { type: Number, default: 0 },
+    advancePaidDate: { type: String, default: '' },
+    amountPaid: { type: Number, default: 0 },
+    amountPaidDate: { type: String, default: '' },
+    balancePending: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
 
 const Bill = mongoose.model('Bill', billSchema);
+
+// Customer Schema
+const customerSchema = new mongoose.Schema(
+  {
+    name: String,
+    address: String,
+    mobile: String,
+    email: String,
+  },
+  { timestamps: true }
+);
+
+const Customer = mongoose.model('Customer', customerSchema);
 
 // REST API Endpoints
 
@@ -150,6 +170,57 @@ app.delete('/api/bills/:id', async (req, res) => {
     res.json({ success: true, message: 'Bill deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting bill', error: error.message });
+  }
+});
+
+// ─────────────────────────────────────────────
+// CUSTOMER API ENDPOINTS
+// ─────────────────────────────────────────────
+
+// 1. Get all customers
+app.get('/api/customers', async (req, res) => {
+  try {
+    const customers = await Customer.find().sort({ name: 1 });
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving customers', error: error.message });
+  }
+});
+
+// 2. Create or Update a customer
+app.post('/api/customers', async (req, res) => {
+  try {
+    const customerData = req.body;
+    let customer;
+
+    if (customerData._id) {
+      customer = await Customer.findById(customerData._id);
+    }
+
+    if (customer) {
+      Object.assign(customer, customerData);
+      await customer.save();
+    } else {
+      customer = new Customer(customerData);
+      await customer.save();
+    }
+
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving customer', error: error.message });
+  }
+});
+
+// 3. Delete a customer
+app.delete('/api/customers/:id', async (req, res) => {
+  try {
+    const result = await Customer.findByIdAndDelete(req.params.id);
+    if (!result) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+    res.json({ success: true, message: 'Customer deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting customer', error: error.message });
   }
 });
 
