@@ -6,7 +6,7 @@ const isDev = import.meta.env.DEV;
 const API_URL = import.meta.env.VITE_API_URL || 
   (isDev 
     ? 'http://localhost:5000/api/bills' 
-    : `${window.location.protocol}//${window.location.hostname}:5001/api/bills`);
+    : `${window.location.protocol}//${window.location.hostname}:5002/api/bills`);
 
 /**
  * Fetch all bills sorted by updatedAt/createdAt desc from MongoDB server
