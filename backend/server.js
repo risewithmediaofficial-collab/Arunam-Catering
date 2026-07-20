@@ -68,6 +68,20 @@ const Bill = mongoose.model('Bill', billSchema);
 
 // REST API Endpoints
 
+// 0. Root Endpoint
+app.get('/', (req, res) => {
+  res.json({
+    status: 'online',
+    message: 'Arunam Catering Services API is fully active!',
+    endpoints: {
+      getAllBills: 'GET /api/bills',
+      getBillById: 'GET /api/bills/:id',
+      saveBill: 'POST /api/bills',
+      deleteBill: 'DELETE /api/bills/:id'
+    }
+  });
+});
+
 // 1. Get all bills (sorted by createdAt/updatedAt descending)
 app.get('/api/bills', async (req, res) => {
   try {
