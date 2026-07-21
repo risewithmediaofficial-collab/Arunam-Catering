@@ -85,6 +85,7 @@ const billSchema = new mongoose.Schema(
     advancePaidDate: { type: String, default: '' },
     amountPaid: { type: Number, default: 0 },
     amountPaidDate: { type: String, default: '' },
+    payments: [mongoose.Schema.Types.Mixed],
     balancePending: { type: Number, default: 0 },
   },
   { timestamps: true }
@@ -131,10 +132,20 @@ app.get('/api/bills', async (req, res) => {
   }
 });
 
-// 2. Get single bill by unique UUID id
+// 2. Get single bill by unique UUID id, S.No, or Mongo _id
 app.get('/api/bills/:id', async (req, res) => {
   try {
-    const bill = await Bill.findOne({ id: req.params.id });
+    const param = req.params.id;
+    const queryConditions = [{ id: param }];
+
+    if (!isNaN(param)) {
+      queryConditions.push({ sno: Number(param) });
+    }
+    if (mongoose.Types.ObjectId.isValid(param)) {
+      queryConditions.push({ _id: param });
+    }
+
+    const bill = await Bill.findOne({ $or: queryConditions });
     if (!bill) {
       return res.status(404).json({ message: 'Bill not found' });
     }

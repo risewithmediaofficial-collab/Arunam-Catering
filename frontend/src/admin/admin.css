@@ -101,6 +101,10 @@
     border: none !important;
     background: #ffffff !important;
   }
+  tr, div[class*="border"], div[class*="rounded"], .print-avoid-break {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
   .no-print {
     display: none !important;
   }

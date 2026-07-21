@@ -59,7 +59,7 @@ export async function getBillById(id) {
   } catch (e) {
     console.warn('getBillById: backend unavailable, checking local cache:', e.message);
     const bills = localGetBills();
-    return bills.find(b => b.id === id) || null;
+    return bills.find(b => String(b.id) === String(id) || String(b.sno) === String(id) || String(b._id) === String(id)) || null;
   }
 }
 

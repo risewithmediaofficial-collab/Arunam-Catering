@@ -96,6 +96,9 @@ export default function BillForm() {
   // Temporary dropdown values
   const [tempDishInput, setTempDishInput] = useState({ breakfast: '', lunch: '', dinner: '', stalls: '' });
 
+  // Multiple Payments Array State
+  const [payments, setPayments] = useState([]);
+
   // Load existing bill if editing
   useEffect(() => {
     async function loadData() {
@@ -148,11 +151,34 @@ export default function BillForm() {
             setMenuOptions(existing.menuOptions);
           }
 
-          // Payment log recovery
+          // Payment log recovery (Support dynamic payments array + backward compatibility)
           setAdvancePaid(existing.advancePaid || '');
           setAdvancePaidDate(existing.advancePaidDate || '');
           setAmountPaid(existing.amountPaid || '');
           setAmountPaidDate(existing.amountPaidDate || '');
+
+          let recoveredPayments = existing.payments && existing.payments.length > 0 ? existing.payments : [];
+          if (recoveredPayments.length === 0) {
+            if (existing.advancePaid) {
+              recoveredPayments.push({
+                id: 'legacy_adv',
+                amount: existing.advancePaid,
+                date: existing.advancePaidDate || '',
+                method: 'Advance',
+                notes: 'Initial Advance'
+              });
+            }
+            if (existing.amountPaid) {
+              recoveredPayments.push({
+                id: 'legacy_part',
+                amount: existing.amountPaid,
+                date: existing.amountPaidDate || '',
+                method: 'Installment',
+                notes: 'Second Payment'
+              });
+            }
+          }
+          setPayments(recoveredPayments);
         } else {
           alert('Bill not found!');
           navigate('/admin');
@@ -166,6 +192,32 @@ export default function BillForm() {
     }
     loadData();
   }, [id, isEditMode, navigate]);
+
+  // Payment array handlers
+  const handleAddPayment = () => {
+    setPayments((prev) => [
+      ...prev,
+      {
+        id: 'pay_' + Date.now(),
+        amount: '',
+        date: new Date().toISOString().split('T')[0],
+        method: 'GPay / UPI',
+        notes: ''
+      }
+    ]);
+  };
+
+  const handleUpdatePayment = (index, field, value) => {
+    setPayments((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const handleRemovePayment = (index) => {
+    setPayments((prev) => prev.filter((_, i) => i !== index));
+  };
 
   // Handle Excel Menu template loading
   const handleExcelUpload = (e) => {
@@ -543,6 +595,10 @@ export default function BillForm() {
       advancePaidDate,
       amountPaid: Number(amountPaid) || 0,
       amountPaidDate,
+      payments: payments.map((p) => ({
+        ...p,
+        amount: Number(p.amount) || 0
+      })),
       balancePending
     };
 
@@ -550,7 +606,8 @@ export default function BillForm() {
     if (saved) {
       alert(`Catering Bill #${saved.sno} successfully saved!`);
       if (redirectTarget === 'print') {
-        navigate(`/admin/bill/${saved.sno}/print`);
+        const targetId = saved.id || saved._id || saved.sno;
+        navigate(`/admin/bill/${targetId}/print`);
       } else {
         navigate('/admin');
       }
@@ -1734,74 +1791,116 @@ export default function BillForm() {
                 </span>
               </div>
 
-              {/* Payment Log Ledger */}
+              {/* Payment Log Ledger (Multiple Payments Supported) */}
               <div className="border-t-2 border-dashed border-gray-250 pt-4 space-y-4">
-                <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">Payment Ledger log</h3>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 font-bold mb-1">Advance Paid (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="Amount"
-                      value={advancePaid}
-                      onChange={(e) => setAdvancePaid(e.target.value)}
-                      className="admin-input py-1 text-xs text-right font-medium"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 font-bold mb-1">Advance Date</label>
-                    <input
-                      type="date"
-                      value={advancePaidDate}
-                      onChange={(e) => setAdvancePaidDate(e.target.value)}
-                      className="admin-input py-1 text-xs font-medium cursor-pointer"
-                    />
-                  </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                    Payment Receipts & Installments
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={handleAddPayment}
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-[#FF5C2B] hover:text-[#e04618] bg-[#FF5C2B]/10 hover:bg-[#FF5C2B]/20 px-2.5 py-1 rounded-lg transition-all cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Add Payment
+                  </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 font-bold mb-1">Next Payment (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="Amount"
-                      value={amountPaid}
-                      onChange={(e) => setAmountPaid(e.target.value)}
-                      className="admin-input py-1 text-xs text-right font-medium"
-                    />
+                {payments.length === 0 ? (
+                  <div className="p-3 text-center bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-400 italic">
+                    No payments added yet. Click "+ Add Payment" when client pays advance or installment.
                   </div>
-                  <div className="flex flex-col">
-                    <label className="text-[10px] text-gray-500 font-bold mb-1">Next Pay Date</label>
-                    <input
-                      type="date"
-                      value={amountPaidDate}
-                      onChange={(e) => setAmountPaidDate(e.target.value)}
-                      className="admin-input py-1 text-xs font-medium cursor-pointer"
-                    />
+                ) : (
+                  <div className="space-y-2.5">
+                    {payments.map((p, pIdx) => (
+                      <div key={p.id || pIdx} className="bg-gray-50 p-3 rounded-lg border border-gray-250 space-y-2 relative group">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-gray-700 uppercase">Payment #{pIdx + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleRemovePayment(pIdx)}
+                            className="text-gray-400 hover:text-rose-600 transition-colors p-0.5"
+                            title="Remove Payment"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[10px] text-gray-500 font-bold mb-0.5 block">Amount (₹)</label>
+                            <input
+                              type="number"
+                              min="0"
+                              placeholder="0"
+                              value={p.amount}
+                              onChange={(e) => handleUpdatePayment(pIdx, 'amount', e.target.value)}
+                              className="admin-input py-1 text-xs text-right font-bold w-full"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-gray-500 font-bold mb-0.5 block">Date</label>
+                            <input
+                              type="date"
+                              value={p.date}
+                              onChange={(e) => handleUpdatePayment(pIdx, 'date', e.target.value)}
+                              className="admin-input py-1 text-xs font-medium cursor-pointer w-full"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[10px] text-gray-500 font-bold mb-0.5 block">Mode / Method</label>
+                            <select
+                              value={p.method || 'GPay / UPI'}
+                              onChange={(e) => handleUpdatePayment(pIdx, 'method', e.target.value)}
+                              className="admin-input py-1 text-xs font-medium w-full bg-white"
+                            >
+                              <option value="GPay / UPI">GPay / UPI</option>
+                              <option value="Cash">Cash</option>
+                              <option value="Bank Transfer (NEFT/IMPS)">Bank Transfer</option>
+                              <option value="Cheque">Cheque</option>
+                              <option value="Card">Card</option>
+                              <option value="Advance">Advance Booking</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-gray-500 font-bold mb-0.5 block">Note / Description</label>
+                            <input
+                              type="text"
+                              placeholder="e.g. 50% Advance"
+                              value={p.notes || ''}
+                              onChange={(e) => handleUpdatePayment(pIdx, 'notes', e.target.value)}
+                              className="admin-input py-1 text-xs font-medium w-full"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
+                )}
 
-                <div className="bg-gray-50 p-3 rounded-lg border border-gray-250 space-y-1.5">
-                  <div className="flex justify-between text-xs text-gray-600">
-                    <span>Total Paid</span>
-                    <span className="font-semibold text-gray-800">
-                      ₹{((Number(advancePaid) || 0) + (Number(amountPaid) || 0)).toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline pt-1.5 border-t border-gray-200">
-                    <span className="text-xs font-bold text-gray-700">Balance Pending</span>
-                    <span className={`text-base font-black ${
-                      (grandTotal - (Number(advancePaid) || 0) - (Number(amountPaid) || 0)) > 0
-                        ? 'text-[#FF5C2B]'
-                        : 'text-green-600'
-                    }`}>
-                      ₹{Math.max(0, grandTotal - (Number(advancePaid) || 0) - (Number(amountPaid) || 0)).toLocaleString('en-IN')}
-                    </span>
-                  </div>
-                </div>
+                {/* Calculated Totals Summary */}
+                {(() => {
+                  const sumPayments = payments.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
+                  const totalPaidCalc = sumPayments > 0 ? sumPayments : ((Number(advancePaid) || 0) + (Number(amountPaid) || 0));
+                  const balPendingCalc = Math.max(0, grandTotal - totalPaidCalc);
+
+                  return (
+                    <div className="bg-white p-3 rounded-lg border border-gray-300 space-y-1.5 shadow-2xs">
+                      <div className="flex justify-between text-xs text-gray-600">
+                        <span>Total Payments Received</span>
+                        <span className="font-bold text-emerald-700">₹{totalPaidCalc.toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="flex justify-between items-baseline pt-1.5 border-t border-gray-200">
+                        <span className="text-xs font-bold text-gray-800">Balance Pending</span>
+                        <span className={`text-base font-black ${balPendingCalc > 0 ? 'text-[#FF5C2B]' : 'text-emerald-600'}`}>
+                          ₹{balPendingCalc.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 

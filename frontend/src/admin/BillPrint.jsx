@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getBillById } from './adminStore';
+import { getBillById, getBillFilename } from './adminStore';
 import {
   ArrowLeft,
   Printer,
+  Download,
   MapPin,
   Phone,
   Mail,
@@ -24,6 +25,7 @@ export default function BillPrint() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [bill, setBill] = useState(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     async function loadBill() {
@@ -40,6 +42,49 @@ export default function BillPrint() {
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleDownloadPDF = () => {
+    if (!bill) return;
+    setIsGeneratingPDF(true);
+    const element = document.getElementById('print-area');
+    const filename = getBillFilename(bill);
+
+    const generate = () => {
+      const opt = {
+        margin: [6, 6, 6, 6],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      window
+        .html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => setIsGeneratingPDF(false))
+        .catch((err) => {
+          console.error('PDF generation error:', err);
+          setIsGeneratingPDF(false);
+          window.print();
+        });
+    };
+
+    if (window.html2pdf) {
+      generate();
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      script.onload = () => generate();
+      script.onerror = () => {
+        setIsGeneratingPDF(false);
+        window.print();
+      };
+      document.body.appendChild(script);
+    }
   };
 
   if (!bill) {
@@ -77,7 +122,16 @@ export default function BillPrint() {
     return 'bg-rose-50 text-rose-700 border-rose-200';
   };
 
-  const totalPaid = (bill.advancePaid || 0) + (bill.amountPaid || 0);
+  // Multiple Payments Ledger support with legacy fallback
+  const paymentsList =
+    bill.payments && bill.payments.length > 0
+      ? bill.payments
+      : [
+          ...(bill.advancePaid ? [{ notes: 'Advance Booking Payment', method: 'Advance', amount: bill.advancePaid, date: bill.advancePaidDate }] : []),
+          ...(bill.amountPaid ? [{ notes: 'Part Payment / Installment', method: 'Installment', amount: bill.amountPaid, date: bill.amountPaidDate }] : [])
+        ];
+
+  const totalPaid = paymentsList.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
   const balancePending = Math.max(0, (bill.grandTotal || 0) - totalPaid);
 
   return (
@@ -93,10 +147,18 @@ export default function BillPrint() {
 
         <div className="flex items-center gap-3">
           <button
+            onClick={handleDownloadPDF}
+            disabled={isGeneratingPDF}
+            className="admin-btn-secondary inline-flex items-center gap-2 py-2.5 px-5 cursor-pointer text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-black transition-all"
+          >
+            <Download className="w-4 h-4 text-[#FF5C2B]" />
+            {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF File'}
+          </button>
+          <button
             onClick={handlePrint}
             className="admin-btn-primary inline-flex items-center gap-2 py-2.5 px-6 cursor-pointer text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
           >
-            <Printer className="w-4 h-4" /> Print / Save as PDF
+            <Printer className="w-4 h-4" /> Print Invoice
           </button>
         </div>
       </div>
@@ -262,7 +324,7 @@ export default function BillPrint() {
 
             {/* Breakfast Menu Section */}
             {bill.hasBreakfast && (
-              <div className="border border-amber-200 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="border border-amber-200 rounded-xl overflow-hidden bg-white shadow-sm print-avoid-break">
                 <div className="bg-amber-50/70 border-b border-amber-200 px-5 py-3 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Coffee className="w-4 h-4 text-amber-600" />
@@ -283,6 +345,7 @@ export default function BillPrint() {
                       {bill.selectedBreakfastDishes.map((dish, idx) => (
                         <div
                           key={dish}
+                          style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}
                           className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-amber-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-amber-500 text-white font-bold flex items-center justify-center text-[10px] shrink-0">
@@ -301,7 +364,7 @@ export default function BillPrint() {
 
             {/* Lunch Menu Section */}
             {bill.hasLunch && (
-              <div className="border border-orange-200 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="border border-orange-200 rounded-xl overflow-hidden bg-white shadow-sm print-avoid-break">
                 <div className="bg-orange-50/70 border-b border-orange-200 px-5 py-3 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Sun className="w-4 h-4 text-[#FF5C2B]" />
@@ -322,6 +385,7 @@ export default function BillPrint() {
                       {bill.selectedLunchDishes.map((dish, idx) => (
                         <div
                           key={dish}
+                          style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}
                           className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-orange-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-[#FF5C2B] text-white font-bold flex items-center justify-center text-[10px] shrink-0">
@@ -340,7 +404,7 @@ export default function BillPrint() {
 
             {/* Dinner Menu Section */}
             {bill.hasDinner && (
-              <div className="border border-indigo-200 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="border border-indigo-200 rounded-xl overflow-hidden bg-white shadow-sm print-avoid-break">
                 <div className="bg-indigo-50/70 border-b border-indigo-200 px-5 py-3 flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Moon className="w-4 h-4 text-indigo-600" />
@@ -361,6 +425,7 @@ export default function BillPrint() {
                       {bill.selectedDinnerDishes.map((dish, idx) => (
                         <div
                           key={dish}
+                          style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}
                           className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-indigo-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-indigo-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0">
@@ -379,7 +444,7 @@ export default function BillPrint() {
 
             {/* Live Counters & Food Stalls Section */}
             {bill.stalls && bill.stalls.length > 0 && (
-              <div className="border border-emerald-200 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="border border-emerald-200 rounded-xl overflow-hidden bg-white shadow-sm print-avoid-break">
                 <div className="bg-emerald-50/70 border-b border-emerald-200 px-5 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Building2 className="w-4 h-4 text-emerald-600" />
@@ -394,7 +459,11 @@ export default function BillPrint() {
                   {bill.stalls.map((s, idx) => {
                     const stallCost = s.pricingType === 'plates' ? (s.people || 0) * (s.rate || 0) : (s.fixedPrice || 0);
                     return (
-                      <div key={s.id || idx} className="bg-white rounded-lg border border-emerald-150 p-3.5 space-y-2">
+                      <div
+                        key={s.id || idx}
+                        style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}
+                        className="bg-white rounded-lg border border-emerald-150 p-3.5 space-y-2"
+                      >
                         <div className="flex justify-between items-center border-b border-gray-100 pb-2">
                           <span className="font-extrabold text-xs text-gray-900 uppercase tracking-wide">
                             Stall #{idx + 1}: {s.name}
@@ -553,29 +622,23 @@ export default function BillPrint() {
 
               {/* Ledger Summary */}
               <div className="border-t border-gray-200 pt-3 space-y-2">
-                <p className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400">Payment Ledger</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400">Payment Receipts Ledger</p>
 
-                {(bill.advancePaid || 0) > 0 && (
-                  <div className="flex justify-between text-gray-600">
-                    <span>
-                      Advance Received
-                      {bill.advancePaidDate ? ` (${new Date(bill.advancePaidDate).toLocaleDateString('en-IN')})` : ''}:
-                    </span>
-                    <span className="font-semibold text-emerald-700">₹{(bill.advancePaid || 0).toLocaleString('en-IN')}</span>
-                  </div>
+                {paymentsList.length > 0 ? (
+                  paymentsList.map((p, idx) => (
+                    <div key={idx} className="flex justify-between text-xs text-gray-600">
+                      <span>
+                        {p.notes || p.method || `Payment #${idx + 1}`}
+                        {p.date ? ` (${new Date(p.date).toLocaleDateString('en-IN')})` : ''}:
+                      </span>
+                      <span className="font-semibold text-emerald-700">₹{Number(p.amount || 0).toLocaleString('en-IN')}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-gray-400 italic">No payments recorded yet.</p>
                 )}
 
-                {(bill.amountPaid || 0) > 0 && (
-                  <div className="flex justify-between text-gray-600">
-                    <span>
-                      Next Payment Received
-                      {bill.amountPaidDate ? ` (${new Date(bill.amountPaidDate).toLocaleDateString('en-IN')})` : ''}:
-                    </span>
-                    <span className="font-semibold text-emerald-700">₹{(bill.amountPaid || 0).toLocaleString('en-IN')}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2">
+                <div className="flex justify-between font-bold text-gray-800 border-t border-gray-200 pt-2 text-xs">
                   <span>Total Received:</span>
                   <span className="text-emerald-700">₹{totalPaid.toLocaleString('en-IN')}</span>
                 </div>
