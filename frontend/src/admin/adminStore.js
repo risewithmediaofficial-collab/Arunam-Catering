@@ -4,12 +4,11 @@
 
 const isDev = import.meta.env.DEV;
 
-// Resolve base API URL (no trailing path — we append /api/bills etc. below)
+// In production the nginx proxy forwards /api/* → backend container.
+// In dev mode we hit localhost:5000 directly.
 const BASE_API = import.meta.env.VITE_API_URL
   ? import.meta.env.VITE_API_URL.replace(/\/api\/bills.*$/, '')
-  : (isDev
-      ? 'http://localhost:5000'
-      : `${window.location.protocol}//${window.location.hostname}:5002`);
+  : (isDev ? 'http://localhost:5000' : '');
 
 const BILLS_API     = `${BASE_API}/api/bills`;
 const CUSTOMERS_API = `${BASE_API}/api/customers`;

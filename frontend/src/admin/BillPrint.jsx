@@ -133,18 +133,16 @@ export default function BillPrint() {
       >
         {/* ── TOP HEADER ── */}
         <div className="flex flex-col sm:flex-row items-stretch">
-          {/* Left: Logo + company */}
-          <div className="flex-1 p-5 md:p-7 flex flex-col justify-between">
-            <div className="flex items-center gap-3 mb-3">
-              <img
-                src="/arunam_logo.png"
-                alt="Arunam Catering"
-                className="h-12 md:h-16 w-auto object-contain"
-                onError={(e) => (e.target.style.display = 'none')}
-              />
-            </div>
-            <div className="text-xs text-gray-500 space-y-0.5 mt-2">
-              <p className="text-gray-700 font-semibold text-sm">Arunam Catering Service</p>
+          {/* Left: Logo + company inline */}
+          <div className="flex-1 px-4 py-3 flex flex-row items-center gap-4">
+            <img
+              src="/arunam_logo.png"
+              alt="Arunam Catering"
+              className="h-10 md:h-12 w-auto object-contain shrink-0"
+              onError={(e) => (e.target.style.display = 'none')}
+            />
+            <div className="text-[11px] text-gray-500 space-y-0.5">
+              <p className="text-gray-800 font-bold text-xs">Arunam Catering Service</p>
               <p>Krishnagiri, Tamil Nadu</p>
               <p>+91 98848 89393 / 98848 89394</p>
               <p>arunamcateringservice@gmail.com</p>
@@ -154,17 +152,17 @@ export default function BillPrint() {
 
           {/* Right: INVOICE block */}
           <div
-            className="flex flex-col items-start sm:items-end justify-center px-6 sm:px-8 py-5 sm:py-6"
+            className="flex flex-col items-start sm:items-end justify-center px-5 py-3"
             style={{ background: '#3B1A0A' }}
           >
-            <p className="text-white font-black text-3xl md:text-4xl tracking-widest uppercase">INVOICE</p>
-            <p className="text-[#F5C48A] font-bold text-sm md:text-base mt-1">No. #{String(bill.sno || 0).padStart(4, '0')}</p>
-            <div className="mt-3 text-left sm:text-right text-xs text-[#d4a472] space-y-1">
+            <p className="text-white font-black text-2xl md:text-3xl tracking-widest uppercase">INVOICE</p>
+            <p className="text-[#F5C48A] font-bold text-xs md:text-sm mt-0.5">No. #{String(bill.sno || 0).padStart(4, '0')}</p>
+            <div className="mt-2 text-left sm:text-right text-[11px] text-[#d4a472] space-y-0.5">
               <p><span className="text-[#F5C48A] font-semibold">Date:</span> {invoiceDate}</p>
               <p><span className="text-[#F5C48A] font-semibold">Event:</span> {eventDate}</p>
-              <p className="mt-2">
+              <p className="mt-1">
                 <span
-                  className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider"
+                  className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider"
                   style={{
                     background: bill.status === 'Paid' ? '#14532d' : '#7f1d1d',
                     color: bill.status === 'Paid' ? '#86efac' : '#fca5a5',
@@ -178,21 +176,21 @@ export default function BillPrint() {
         </div>
 
         {/* ── FROM / BILL TO ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 px-5 md:px-7 py-5 border-t border-b border-gray-200 gap-5 bg-[#fdfaf6]">
+        <div className="grid grid-cols-2 px-4 py-3 border-t border-b border-gray-200 gap-4 bg-[#fdfaf6]">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">From</p>
-            <p className="text-sm font-bold text-gray-800">Arunam Catering Service</p>
-            <p className="text-xs text-gray-500 mt-0.5">+91 98848 89393</p>
-            <p className="text-xs text-gray-500">arunamcateringservice@gmail.com</p>
+            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">From</p>
+            <p className="text-xs font-bold text-gray-800">Arunam Catering Service</p>
+            <p className="text-[11px] text-gray-500">+91 98848 89393</p>
+            <p className="text-[11px] text-gray-500">arunamcateringservice@gmail.com</p>
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Bill To</p>
-            <p className="text-sm font-bold text-gray-800 capitalize">{bill.customer?.name || 'Valued Client'}</p>
-            {bill.customer?.mobile && <p className="text-xs text-gray-500 mt-0.5">{bill.customer.mobile}</p>}
-            {bill.customer?.email && <p className="text-xs text-gray-500">{bill.customer.email}</p>}
-            {bill.customer?.address && <p className="text-xs text-gray-500 mt-1 whitespace-pre-line">{bill.customer.address}</p>}
+            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Bill To</p>
+            <p className="text-xs font-bold text-gray-800 capitalize">{bill.customer?.name || 'Valued Client'}</p>
+            {bill.customer?.mobile && <p className="text-[11px] text-gray-500">{bill.customer.mobile}</p>}
+            {bill.customer?.email && <p className="text-[11px] text-gray-500">{bill.customer.email}</p>}
+            {bill.customer?.address && <p className="text-[11px] text-gray-500 whitespace-pre-line">{bill.customer.address}</p>}
             {bill.functionType && (
-              <p className="text-xs font-semibold text-[#FF5C2B] mt-1">{bill.functionType}</p>
+              <p className="text-[11px] font-semibold text-[#FF5C2B]">{bill.functionType}</p>
             )}
           </div>
         </div>
