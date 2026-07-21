@@ -4,7 +4,6 @@ import WhyChooseUs from '../components/home/WhyChooseUs'
 import ServicesOverview from '../components/home/ServicesOverview'
 import GalleryPreview from '../components/home/GalleryPreview'
 import Testimonials from '../components/home/Testimonials'
-import OrderCTA from '../components/home/OrderCTA'
 
 export default function Home() {
   return (
@@ -15,7 +14,7 @@ export default function Home() {
       <ServicesOverview />
       <GalleryPreview />
       <Testimonials />
-      <OrderCTA />
     </main>
   )
 }
+
