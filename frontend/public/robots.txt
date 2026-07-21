@@ -1,4 +1,4 @@
-# Robots.txt for Arunam Catering Service
+# Robots.txt for Arunam Catering Service (Krishnagiri & Tamil Nadu)
 User-agent: *
 Allow: /
 Allow: /about
@@ -12,5 +12,36 @@ Allow: /contact
 Disallow: /admin
 Disallow: /admin/*
 
-# Sitemap reference for Google Search Console
+# AI Crawlers & LLM Search Agents (GEO / Generative AI Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Sitemap & LLM context reference
 Sitemap: https://arunamcatering.com/sitemap.xml
