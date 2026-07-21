@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   // Metrics
   const totalRevenue = bills.reduce((sum, b) => sum + (b.grandTotal || 0), 0);
   const totalCount = bills.length;
-  
+
   // Calculate total plates count across all breakfast, lunch, and dinner bookings
   const totalBreakfastPlates = bills.reduce((sum, b) => sum + (Number(b.breakfastPeople) || 0), 0);
   const totalLunchPlates = bills.reduce((sum, b) => sum + (Number(b.lunchPeople) || 0), 0);
@@ -59,8 +59,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-wide text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Dashboard Overview
-          </h1>
+            Dashboard           </h1>
           <p className="text-sm text-gray-500 mt-1">Manage, edit, and print customer catering orders</p>
         </div>
         <Link
@@ -120,7 +119,7 @@ export default function AdminDashboard() {
         {/* Table Top Bar */}
         <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h2 className="text-lg font-bold text-gray-800">Recent Catering Bills</h2>
-          
+
           {/* Search bar */}
           <div className="relative max-w-md w-full sm:w-72">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -178,13 +177,12 @@ export default function AdminDashboard() {
                     <td className="py-4 px-6 text-right font-bold text-gray-900">₹{(b.grandTotal || 0).toLocaleString('en-IN')}</td>
                     <td className="py-4 px-6 text-center">
                       <span
-                        className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          b.status === 'Paid'
+                        className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${b.status === 'Paid'
                             ? 'bg-green-100 text-green-700 border border-green-200'
                             : b.status === 'Sent'
-                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                            : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                        }`}
+                              ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                              : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                          }`}
                       >
                         {b.status || 'Draft'}
                       </span>
