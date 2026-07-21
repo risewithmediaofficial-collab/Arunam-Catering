@@ -4,31 +4,42 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import PageHero from '../components/layout/PageHero'
 import SectionHeading from '../components/ui/SectionHeading'
-import ImagePlaceholder from '../components/ui/ImagePlaceholder'
+import {
+  dosaBananaleaf,
+  bananaLeafSpread,
+  drumstickCurryRice,
+  guestsFeast,
+  livePaanStall
+} from '../assets/images'
 
 const cats = [
   {
     id: 'breakfast', label: 'Breakfast',
+    img: dosaBananaleaf,
     desc: 'Start the day right with fresh, traditional South Indian breakfast items.',
     items: ['Idli with Sambar & Chutneys','Medu Vada','Ven Pongal','Kara Pongal','Masala Dosai','Plain Dosai','Rava Dosai','Upma','Kichadi','Poori Masala','Idiyappam','Appam','Filter Coffee','Tea','Fresh Juices'],
   },
   {
     id: 'lunch', label: 'Lunch',
+    img: bananaLeafSpread,
     desc: 'Traditional banana leaf meals honouring authentic South Indian culinary heritage.',
     items: ['Steamed Rice','Papad','Pickle','Sambar','Rasam','Dal','Kootu','Poriyal','Mor Kuzhambu','Aviyal','Pachadi','Appalam','Curd','Buttermilk','Payasam','Kesari','Banana'],
   },
   {
     id: 'dinner', label: 'Dinner',
+    img: drumstickCurryRice,
     desc: 'An elegant dinner spread for diverse tastes with rich curries and aromatic biryanis.',
     items: ['Chapati','Parotta','Naan','Poori','Veg Kurma','Paneer Butter Masala','Dal Makhani','Palak Paneer','Veg Biryani','Pulao','Raita','Salad','Gulab Jamun','Ice Cream','Halwa','Kheer'],
   },
   {
     id: 'smart', label: 'Smart Choice',
+    img: guestsFeast,
     desc: 'Value-for-money packages designed for large-scale events without compromising quality.',
     items: ['Curated Value Plates','Balanced Portions','Bulk-Friendly Preparation','Quick Service System','Hygienic Packaging','Fresh Daily Preparation','Seasonal Dishes','Custom Add-ons'],
   },
   {
     id: 'custom', label: 'Customizable',
+    img: livePaanStall,
     desc: 'Design your own menu — mix and match dishes tailored to your event theme.',
     items: ['Your Choice of Starters','Mix & Match Mains','Dietary Options','Regional Cuisine Specials','Live Cooking Counters','Dessert Bar Setup','Beverage Stations','Juice Counters','Chaat Counters'],
   },
@@ -85,8 +96,8 @@ export default function Menu() {
               className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start"
             >
               {/* Image */}
-              <div style={{ aspectRatio: '4/3' }}>
-                <ImagePlaceholder label={cat.label} aspectRatio="aspect-[4/3]" className="w-full h-full" />
+              <div className="overflow-hidden rounded-2xl shadow-lg bg-neutral-900" style={{ aspectRatio: '4/3' }}>
+                <img src={cat.img} alt={cat.label} className="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105" />
               </div>
 
               {/* Items */}

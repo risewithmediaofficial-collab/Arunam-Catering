@@ -39,21 +39,28 @@ export default function Footer() {
   return (
     <footer style={{ background: '#F3EDE2', borderTop: '1px solid #ECE5DB' }}>
       {/* CTA Band */}
-      <div style={{ background: '#FF5C2B' }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-5">
-          <div>
-            <p
-              className="text-[9.5px] tracking-[0.35em] uppercase mb-1"
-              style={{ color: 'rgba(255,255,255,0.75)', fontFamily: 'Inter, sans-serif' }}
-            >
-              Ready to plan your event?
-            </p>
-            <h3
-              className="text-xl lg:text-2xl text-white font-semibold"
-              style={{ fontFamily: 'Inter, sans-serif' }}
-            >
-              Let's Create Something Memorable
-            </h3>
+      <div className="relative overflow-hidden" style={{ background: '#FF5C2B' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-5 relative z-10">
+          <div className="flex items-center gap-4">
+            <img
+              src="/chef_cartoon_vector.png"
+              alt="Arunam Cartoon Chef Mascot"
+              className="w-16 h-16 md:w-20 md:h-20 object-contain shrink-0 filter drop-shadow-lg"
+            />
+            <div>
+              <p
+                className="text-[9.5px] tracking-[0.35em] uppercase mb-1"
+                style={{ color: 'rgba(255,255,255,0.85)', fontFamily: 'Inter, sans-serif' }}
+              >
+                Ready to plan your event?
+              </p>
+              <h3
+                className="text-xl lg:text-2xl text-white font-semibold"
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                Let's Create Something Memorable
+              </h3>
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <a

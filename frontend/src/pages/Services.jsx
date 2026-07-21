@@ -2,13 +2,19 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check } from 'lucide-react'
 import PageHero from '../components/layout/PageHero'
-import ImagePlaceholder from '../components/ui/ImagePlaceholder'
+import {
+  coupleDining,
+  guestsFeast,
+  welcomeDrinks,
+  bananaLeafSpread
+} from '../assets/images'
 
 const services = [
   {
     id: 'wedding',
     title: 'Wedding Catering',
     eyebrow: 'Premium Service',
+    img: coupleDining,
     desc: 'Chennai\'s most trusted wedding caterers. Authentic South Indian menus, elegant presentation, and flawless execution for your most important day.',
     highlights: ['South Indian multi-cuisine menus', 'Banana leaf & fine dining setups', 'Live cooking counters', 'Custom menu planning', '300–2000+ guests capacity', 'Experienced wedding team'],
     stats: [{ n: '5,000+', l: 'Weddings' }, { n: '4.9★', l: 'Rating' }],
@@ -18,6 +24,7 @@ const services = [
     id: 'corporate',
     title: 'Corporate Catering',
     eyebrow: 'Professional Service',
+    img: guestsFeast,
     desc: 'Professional catering for corporate environments — from daily office meals to large-scale business events, delivered with punctuality and quality.',
     highlights: ['Office meetings & team lunches', 'Corporate event catering', 'Business celebrations', 'Veg and Non-Veg options', 'Customized quantity planning', 'On-time delivery guaranteed'],
     stats: [{ n: '500+', l: 'Corp. Events' }, { n: '100%', l: 'On Time' }],
@@ -27,6 +34,7 @@ const services = [
     id: 'engagement',
     title: 'Engagement Catering',
     eyebrow: 'Traditional Service',
+    img: welcomeDrinks,
     desc: 'Mark your engagement with authentic South Indian flavours. Comprehensive menu planning and professional coordination for your ceremony.',
     highlights: ['Traditional ceremony menus', 'Family function specialists', 'Professional coordination', 'Custom menu creation', 'Local Chennai expertise', 'Smooth event management'],
     stats: [{ n: '1,000+', l: 'Engagements' }, { n: '25+', l: 'Years' }],
@@ -36,6 +44,7 @@ const services = [
     id: 'babyshower',
     title: 'Baby Shower & Birthday',
     eyebrow: 'Celebration Service',
+    img: bananaLeafSpread,
     desc: 'Customised menus and warm hospitality for baby showers, birthday parties, and every joyful milestone in between.',
     highlights: ['Themed menu options', 'Customized food stations', 'Dessert counters', 'Hygienic child-safe prep', 'Friendly serving staff', 'Flexible guest counts'],
     stats: [{ n: '800+', l: 'Celebrations' }, { n: '5★', l: 'Service' }],
@@ -62,10 +71,10 @@ function ServiceSection({ service, i }) {
             className={`relative ${service.reverse ? 'lg:order-2' : ''}`}
           >
             <div
-              className="overflow-hidden"
-              style={{ aspectRatio: '4/3', background: '#EDE5D8' }}
+              className="overflow-hidden rounded-3xl shadow-xl bg-neutral-900"
+              style={{ aspectRatio: '4/3' }}
             >
-              <ImagePlaceholder label={service.title} aspectRatio="aspect-[4/3]" className="w-full h-full" />
+              <img src={service.img} alt={service.title} className="w-full h-full object-cover opacity-90 transition-transform duration-500 hover:scale-105" />
             </div>
             {/* Stats badge */}
             <div
