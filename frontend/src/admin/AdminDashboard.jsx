@@ -59,7 +59,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-wide text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Dashboard           </h1>
+            Dashboard</h1>
           <p className="text-sm text-gray-500 mt-1">Manage, edit, and print customer catering orders</p>
         </div>
         <Link
@@ -178,10 +178,10 @@ export default function AdminDashboard() {
                     <td className="py-4 px-6 text-center">
                       <span
                         className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${b.status === 'Paid'
-                            ? 'bg-green-100 text-green-700 border border-green-200'
-                            : b.status === 'Sent'
-                              ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                              : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                          ? 'bg-green-100 text-green-700 border border-green-200'
+                          : b.status === 'Sent'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
                           }`}
                       >
                         {b.status || 'Draft'}

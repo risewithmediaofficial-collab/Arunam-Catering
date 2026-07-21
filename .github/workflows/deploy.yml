@@ -21,15 +21,31 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          port: 22
+          port: ${{ secrets.PORT || 22 }}
+          timeout: 60s
+          command_timeout: 20m
           script: |
             set -e
+            echo "==> Navigating to project directory..."
+            if [ -d "/docker/Arunam-Catering" ]; then
+              cd /docker/Arunam-Catering
+            elif [ -n "${{ secrets.TARGET_DIR }}" ]; then
+              cd ${{ secrets.TARGET_DIR }}
+            fi
 
-            cd /docker/Arunam-Catering
-
+            echo "==> Pulling latest code..."
             git pull origin main
 
-            docker compose down
-            docker compose up -d --build
+            echo "==> Rebuilding and starting Docker containers..."
+            if command -v docker-compose &> /dev/null; then
+              docker-compose down
+              docker-compose up -d --build
+            else
+              docker compose down
+              docker compose up -d --build
+            fi
 
+            echo "==> Cleaning unused Docker images..."
             docker image prune -f
+
+            echo "==> Deployment completed successfully!"
