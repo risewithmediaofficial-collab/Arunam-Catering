@@ -250,6 +250,69 @@ app.delete('/api/customers/:id', async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────
+// ENQUIRY API ENDPOINTS
+// ─────────────────────────────────────────────
+
+const enquirySchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    email: String,
+    guests: String,
+    eventType: String,
+    date: String,
+    message: String,
+    status: { type: String, default: 'New' }, // New | Contacted | Closed
+  },
+  { timestamps: true }
+);
+
+const Enquiry = mongoose.model('Enquiry', enquirySchema);
+
+// 1. Get all enquiries (newest first)
+app.get('/api/enquiries', async (req, res) => {
+  try {
+    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
+    res.json(enquiries);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving enquiries', error: error.message });
+  }
+});
+
+// 2. Create a new enquiry (from public contact form)
+app.post('/api/enquiries', async (req, res) => {
+  try {
+    const enquiry = new Enquiry(req.body);
+    await enquiry.save();
+    res.status(201).json(enquiry);
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving enquiry', error: error.message });
+  }
+});
+
+// 3. Update enquiry status (admin action)
+app.patch('/api/enquiries/:id', async (req, res) => {
+  try {
+    const enquiry = await Enquiry.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!enquiry) return res.status(404).json({ message: 'Enquiry not found' });
+    res.json(enquiry);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating enquiry', error: error.message });
+  }
+});
+
+// 4. Delete an enquiry
+app.delete('/api/enquiries/:id', async (req, res) => {
+  try {
+    const result = await Enquiry.findByIdAndDelete(req.params.id);
+    if (!result) return res.status(404).json({ message: 'Enquiry not found' });
+    res.json({ success: true, message: 'Enquiry deleted' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting enquiry', error: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
 });

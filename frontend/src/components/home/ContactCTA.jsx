@@ -50,7 +50,7 @@ export default function ContactCTA() {
               style={{ color: '#6B6560', fontFamily: 'Inter, sans-serif' }}
             >
               Get in touch to discuss your event requirements. We handle celebrations of
-              300+ guests across Chennai with professionalism and culinary excellence.
+              300+ guests across Krishnagiri & Tamil Nadu with professionalism and culinary excellence.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-7">
@@ -88,7 +88,7 @@ export default function ContactCTA() {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mt-7 pt-7" style={{ borderTop: '1px solid #F0EAE0' }}>
-              {['Min. 300 Guests', 'Custom Menus', 'Free Quote', 'Chennai Based'].map(tag => (
+              {['Min. 300 Guests', 'Custom Menus', 'Free Quote', 'Krishnagiri & Tamil Nadu'].map(tag => (
                 <span
                   key={tag}
                   className="text-[9.5px] tracking-[0.18em] uppercase px-3 py-1.5"

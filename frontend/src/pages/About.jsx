@@ -10,13 +10,13 @@ const values = [
   { title: 'Authenticity', desc: 'Traditional South Indian recipes passed down through generations.' },
   { title: 'Hygiene', desc: 'Highest food safety standards in every kitchen we operate.' },
   { title: 'Professionalism', desc: 'From planning to plating, executed with precision and care.' },
-  { title: 'Community', desc: 'Chennai\'s own — rooted in local culture for 25+ years.' },
+  { title: 'Community', desc: 'Tamilnadu\'s own — rooted in local culture for 25+ years.' },
 ]
 
 const events = [
-  'Wedding','Reception','Engagement','Corporate Events',
-  'Birthday Party','Baby Shower','Housewarming','Family Functions',
-  'Office Functions','Traditional Celebrations',
+  'Wedding', 'Reception', 'Engagement', 'Corporate Events',
+  'Birthday Party', 'Baby Shower', 'Housewarming', 'Family Functions',
+  'Office Functions', 'Traditional Celebrations',
 ]
 
 export default function About() {
@@ -27,7 +27,7 @@ export default function About() {
       <PageHero
         eyebrow="Our Story"
         title="25 Years of Culinary Excellence"
-        subtitle="A journey of passion, tradition, and exceptional service across Chennai."
+        subtitle="A journey of passion, tradition, and exceptional service across Krishnagiri & Tamil Nadu."
         bgLabel="About Hero"
       />
 
@@ -38,7 +38,7 @@ export default function About() {
             <div ref={ref}>
               <SectionHeading
                 eyebrow="Who We Are"
-                title="Chennai's Most Trusted Catering Partner"
+                title="Tamil Nadu's Most Trusted Catering Partner"
                 align="left"
               />
               <div
@@ -48,7 +48,7 @@ export default function About() {
                 <p>
                   Arunam Catering Service was born from a simple passion — to bring authentic,
                   high-quality food to the most important moments in people's lives. From a small
-                  family operation, we have grown into one of Chennai's most trusted catering brands.
+                  family operation, we have grown into one of Tamil Nadu's most trusted catering brands.
                 </p>
                 <p>
                   With over 25 years of experience and 5,000+ weddings catered, we understand
@@ -153,7 +153,7 @@ export default function About() {
           <SectionHeading
             eyebrow="Event Coverage"
             title="Every Celebration, Expertly Catered"
-            subtitle="Our culinary expertise spans a wide range of events across Chennai."
+            subtitle="Our culinary expertise spans a wide range of events across Tamilnadu."
           />
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {events.map((event, i) => (

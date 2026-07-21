@@ -8,7 +8,7 @@ export default function Chef() {
     <section className="py-20 md:py-24 bg-[#FAF7F2] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          
+
           {/* Left Block: Gourmet Display Card */}
           <div className="lg:col-span-5 relative group">
             <div className="relative overflow-hidden rounded-3xl shadow-xl aspect-[4/5] bg-neutral-900">
@@ -18,7 +18,7 @@ export default function Chef() {
                 className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              
+
               {/* Overlay Glass Card */}
               <div className="absolute bottom-6 inset-x-6 glass-panel-dark rounded-2xl p-5 text-white">
                 <span className="text-[9px] tracking-[0.25em] uppercase font-bold text-[#FF5C2B] block mb-1">
@@ -51,7 +51,7 @@ export default function Chef() {
                 From family functions to big weddings and corporate events, we take care of everything so you and your guests can enjoy the occasion without worry.
               </p>
               <p>
-                At Arunam Catering, we believe good food makes every celebration better. We are a Chennai-based catering service offering tasty, high-quality food with friendly and reliable service for all kinds of events.
+                At Arunam Catering, we believe good food makes every celebration better. We are a Krishnagiri & Tamil Nadu-based premier catering service offering tasty, high-quality food with friendly and reliable service for all kinds of events.
               </p>
             </div>
 

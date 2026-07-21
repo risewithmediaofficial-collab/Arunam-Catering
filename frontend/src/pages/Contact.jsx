@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { Phone, Mail, MapPin, MessageCircle, Clock, Send } from 'lucide-react'
 import PageHero from '../components/layout/PageHero'
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 const eventTypes = [
   'Wedding','Reception','Engagement','Corporate Event',
   'Birthday Party','Baby Shower','Housewarming','Family Function','Other',
@@ -23,15 +25,36 @@ const inputCls = {
 export default function Contact() {
   const [form, setForm] = useState({ name:'', phone:'', email:'', guests:'', eventType:'', date:'', message:'' })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [focused, setFocused] = useState('')
 
   const change = e => setForm({ ...form, [e.target.name]: e.target.value })
-  const submit = e => { e.preventDefault(); setSubmitted(true) }
+
+  const submit = async e => {
+    e.preventDefault()
+    setSubmitting(true)
+    setError('')
+    try {
+      const res = await fetch(`${API}/api/enquiries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Failed to submit')
+      setSubmitted(true)
+    } catch (err) {
+      setError('Something went wrong. Please call us directly.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const fieldStyle = name => ({
     ...inputCls,
     borderColor: focused === name ? '#FF5C2B' : '#E6DDD2',
   })
+
 
   return (
     <main>
@@ -238,14 +261,19 @@ export default function Contact() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-[0.82rem] text-red-500 mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>{error}</p>
+                  )}
+
                   <button
                     type="submit"
+                    disabled={submitting}
                     className="flex items-center gap-2.5 text-[11px] tracking-[0.2em] uppercase font-semibold px-9 py-3.5 transition-all duration-250"
-                    style={{ background: '#FF5C2B', color: '#fff', fontFamily: 'Inter, sans-serif', border: 'none', cursor: 'pointer' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#E04618'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#FF5C2B'}
+                    style={{ background: submitting ? '#aaa' : '#FF5C2B', color: '#fff', fontFamily: 'Inter, sans-serif', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer' }}
+                    onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#E04618' }}
+                    onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = '#FF5C2B' }}
                   >
-                    <Send size={13} /> Send Inquiry
+                    <Send size={13} /> {submitting ? 'Sending...' : 'Send Inquiry'}
                   </button>
                 </form>
               )}

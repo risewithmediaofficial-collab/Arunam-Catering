@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { isLoggedIn, logout, getAdminName } from './adminAuth';
-import { LayoutDashboard, FileSpreadsheet, Users, LogOut, Menu, X, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, FileSpreadsheet, Users, Inbox, LogOut, Menu, X, ArrowLeft } from 'lucide-react';
 import './admin.css';
 
 export default function AdminLayout({ children }) {
@@ -39,6 +39,11 @@ export default function AdminLayout({ children }) {
       name: 'Customers',
       path: '/admin/customers',
       icon: Users,
+    },
+    {
+      name: 'Enquiries',
+      path: '/admin/enquiries',
+      icon: Inbox,
     },
   ];
 
