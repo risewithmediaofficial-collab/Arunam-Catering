@@ -12,14 +12,34 @@ import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 import AdminApp from './admin/AdminApp'
 
-// Scroll to top on route change
+// Scroll to top on route change for all pages
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, search, hash } = useLocation()
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [pathname])
+    if (hash) {
+      const element = document.querySelector(hash)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        return
+      }
+    }
+
+    // Scroll window and root elements to top instantly on route change
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+
+    // Reset scroll on layout container elements (including Admin layout)
+    const mainContainers = document.querySelectorAll('main, .admin-scrollbar, .overflow-y-auto')
+    mainContainers.forEach((el) => {
+      if (el) el.scrollTop = 0
+    })
+  }, [pathname, search, hash])
+
   return null
 }
+
 
 // WhatsApp floating button
 function WhatsAppFloat() {
