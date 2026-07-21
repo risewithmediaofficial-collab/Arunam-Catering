@@ -13,12 +13,31 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/arunam';
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log('Connected successfully to local MongoDB server'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+// MongoDB Connection with Smart Port Fallback (27017 <-> 27020)
+const primaryUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/arunam';
+const fallbackUri = primaryUri.includes('27020')
+  ? primaryUri.replace('27020', '27017')
+  : primaryUri.replace('27017', '27020');
+
+async function connectMongoDB() {
+  try {
+    await mongoose.connect(primaryUri, { serverSelectionTimeoutMS: 3000 });
+    console.log(`Connected successfully to MongoDB at ${primaryUri}`);
+  } catch (err) {
+    console.warn(`Could not connect to primary MongoDB (${primaryUri}): ${err.message}`);
+    console.log(`Attempting fallback MongoDB port (${fallbackUri})...`);
+    try {
+      await mongoose.connect(fallbackUri, { serverSelectionTimeoutMS: 3000 });
+      console.log(`Connected successfully to fallback MongoDB at ${fallbackUri}`);
+    } catch (fallbackErr) {
+      console.error('MongoDB connection notice: Local MongoDB server is not running on port 27017 or 27020.');
+      console.log('To start MongoDB on Windows: run `mongod` or start MongoDB Windows Service.');
+    }
+  }
+}
+
+connectMongoDB();
+
 
 // Mongoose Schema
 const billSchema = new mongoose.Schema(
