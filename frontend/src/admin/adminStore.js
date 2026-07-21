@@ -1,77 +1,139 @@
 // ─────────────────────────────────────────────
-//  Arunam Admin — Store/CRUD helpers (MongoDB API)
+//  Arunam Admin — Store/CRUD helpers (MongoDB API + localStorage fallback)
 // ─────────────────────────────────────────────
 
 const isDev = import.meta.env.DEV;
-const API_URL = import.meta.env.VITE_API_URL || 
-  (isDev 
-    ? 'http://localhost:5000/api/bills' 
-    : `${window.location.protocol}//${window.location.hostname}:5002/api/bills`);
+
+// Resolve base API URL (no trailing path — we append /api/bills etc. below)
+const BASE_API = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace(/\/api\/bills.*$/, '')
+  : (isDev
+      ? 'http://localhost:5000'
+      : `${window.location.protocol}//${window.location.hostname}:5002`);
+
+const BILLS_API     = `${BASE_API}/api/bills`;
+const CUSTOMERS_API = `${BASE_API}/api/customers`;
+const ENQUIRIES_API = `${BASE_API}/api/enquiries`;
+
+// localStorage fallback keys
+const LOCAL_BILLS_KEY     = 'arunam_bills_fallback';
+const LOCAL_CUSTOMERS_KEY = 'arunam_customers_fallback';
+
+// ─────────────────────── BILLS ───────────────────────
+
+function localGetBills() {
+  try {
+    const stored = localStorage.getItem(LOCAL_BILLS_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
+
+function localSaveBills(bills) {
+  try { localStorage.setItem(LOCAL_BILLS_KEY, JSON.stringify(bills)); } catch {}
+}
 
 /**
- * Fetch all bills sorted by updatedAt/createdAt desc from MongoDB server
+ * Fetch all bills (MongoDB → local fallback)
  */
 export async function getBills() {
   try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error('Failed to fetch bills');
-    return await res.json();
+    const res = await fetch(BILLS_API);
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+    const bills = await res.json();
+    localSaveBills(bills); // keep local cache in sync
+    return bills;
   } catch (e) {
-    console.error('Error reading bills from MongoDB backend:', e);
-    return [];
+    console.warn('Bills: backend unavailable, using localStorage cache:', e.message);
+    return localGetBills().sort((a, b) => (b.sno || 0) - (a.sno || 0));
   }
 }
 
 /**
- * Fetch a single bill by ID from MongoDB server
+ * Fetch a single bill by UUID id
  */
 export async function getBillById(id) {
   try {
-    const res = await fetch(`${API_URL}/${id}`);
-    if (!res.ok) {
-      if (res.status === 404) return null;
-      throw new Error('Failed to fetch bill');
-    }
+    const res = await fetch(`${BILLS_API}/${id}`);
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error('Server error: ' + res.status);
     return await res.json();
   } catch (e) {
-    console.error('Error reading bill by ID from MongoDB backend:', e);
-    return null;
+    console.warn('getBillById: backend unavailable, checking local cache:', e.message);
+    const bills = localGetBills();
+    return bills.find(b => b.id === id) || null;
   }
 }
 
 /**
- * Save or update a bill in MongoDB server
+ * Save or update a bill (MongoDB → localStorage fallback)
  */
 export async function saveBill(billData) {
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetch(BILLS_API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(billData),
     });
-    if (!res.ok) throw new Error('Failed to save bill');
-    return await res.json();
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+    const saved = await res.json();
+
+    // Keep local cache updated
+    const bills = localGetBills();
+    const idx = bills.findIndex(b => b.id === saved.id);
+    if (idx >= 0) bills[idx] = saved; else bills.unshift(saved);
+    localSaveBills(bills);
+
+    return saved;
   } catch (e) {
-    console.error('Error saving bill to MongoDB backend:', e);
-    return null;
+    console.warn('saveBill: backend unavailable, saving to localStorage:', e.message);
+
+    // ── Local fallback save ──
+    const bills = localGetBills();
+    let bill;
+
+    if (billData.id) {
+      const idx = bills.findIndex(b => b.id === billData.id);
+      if (idx >= 0) {
+        bills[idx] = { ...bills[idx], ...billData, updatedAt: new Date().toISOString() };
+        bill = bills[idx];
+      }
+    }
+
+    if (!bill) {
+      // assign sno
+      const maxSno = bills.reduce((m, b) => Math.max(m, b.sno || 0), 0);
+      bill = {
+        ...billData,
+        id: billData.id || crypto.randomUUID(),
+        sno: billData.sno || maxSno + 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      bills.unshift(bill);
+    }
+
+    localSaveBills(bills);
+    return bill;
   }
 }
 
 /**
- * Delete a bill by ID in MongoDB server
+ * Delete a bill by UUID id
  */
 export async function deleteBill(id) {
   try {
-    const res = await fetch(`${API_URL}/${id}`, {
-      method: 'DELETE',
-    });
-    if (!res.ok) throw new Error('Failed to delete bill');
+    const res = await fetch(`${BILLS_API}/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+
+    // Remove from local cache too
+    const bills = localGetBills().filter(b => b.id !== id);
+    localSaveBills(bills);
     return true;
   } catch (e) {
-    console.error('Error deleting bill from MongoDB backend:', e);
-    return false;
+    console.warn('deleteBill: backend unavailable, deleting from localStorage:', e.message);
+    const bills = localGetBills().filter(b => b.id !== id);
+    localSaveBills(bills);
+    return true;
   }
 }
 
@@ -85,128 +147,130 @@ export function getBillFilename(bill) {
   return `Arunam_Bill_SNo_${bill.sno}_${name}_${date}.pdf`;
 }
 
-// ─────────────────────────────────────────────
-// CUSTOMER API HELPERS (MongoDB API)
-// ─────────────────────────────────────────────
+// ─────────────────────── CUSTOMERS ───────────────────────
 
-const CUSTOMERS_API_URL = import.meta.env.VITE_API_URL
-  ? import.meta.env.VITE_API_URL.replace('/api/bills', '/api/customers')
-  : (isDev 
-      ? 'http://localhost:5000/api/customers' 
-      : `${window.location.protocol}//${window.location.hostname}:5002/api/customers`);
+function localGetCustomers() {
+  try {
+    const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
 
-const LOCAL_CUSTOMERS_KEY = 'arunam_customers_fallback';
+function localSaveCustomers(customers) {
+  try { localStorage.setItem(LOCAL_CUSTOMERS_KEY, JSON.stringify(customers)); } catch {}
+}
 
 /**
- * Fetch all customers sorted alphabetically from MongoDB server (or fallback)
+ * Fetch all customers (MongoDB → localStorage fallback)
  */
 export async function getCustomers() {
   try {
-    const res = await fetch(CUSTOMERS_API_URL);
-    if (!res.ok) throw new Error('Failed to fetch customers');
+    const res = await fetch(CUSTOMERS_API);
+    if (!res.ok) throw new Error('Server error: ' + res.status);
     const apiCustomers = await res.json();
-    
-    // Also include any local fallback customers if any
-    const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-    const localCustomers = stored ? JSON.parse(stored) : [];
-    
+
+    // Merge with any local-only entries
+    const localCustomers = localGetCustomers();
     const apiIds = new Set(apiCustomers.map(c => c._id));
     const uniqueLocal = localCustomers.filter(c => !apiIds.has(c._id));
-    return [...apiCustomers, ...uniqueLocal].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    const merged = [...apiCustomers, ...uniqueLocal].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    localSaveCustomers(merged);
+    return merged;
   } catch (e) {
-    console.error('Error reading customers from MongoDB backend, using fallback:', e);
-    const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-    return stored ? JSON.parse(stored) : [];
+    console.warn('Customers: backend unavailable, using localStorage cache:', e.message);
+    return localGetCustomers().sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }
 }
 
 /**
- * Save or update a customer in MongoDB server (with local storage fallback)
+ * Save or update a customer (MongoDB → localStorage fallback)
  */
 export async function saveCustomer(customerData) {
   try {
-    // Clean payload to ensure empty _id is not sent
     const payload = { ...customerData };
-    if (!payload._id || payload._id === '' || payload._id === 'null' || payload._id === 'undefined') {
+    if (!payload._id || ['', 'null', 'undefined'].includes(String(payload._id))) {
       delete payload._id;
     }
 
-    const res = await fetch(CUSTOMERS_API_URL, {
+    const res = await fetch(CUSTOMERS_API, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+    if (!res.ok) throw new Error(`Server error: ${res.status} ${res.statusText}`);
+    const saved = await res.json();
 
-    if (!res.ok) throw new Error(`Failed to save customer (${res.statusText})`);
-    return await res.json();
+    // Update local cache
+    const customers = localGetCustomers();
+    const idx = customers.findIndex(c => c._id === saved._id);
+    if (idx >= 0) customers[idx] = saved; else customers.push(saved);
+    localSaveCustomers(customers);
+
+    return saved;
   } catch (e) {
-    console.error('Error saving customer to MongoDB backend, saving to local fallback:', e);
-    try {
-      const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-      let localCustomers = stored ? JSON.parse(stored) : [];
+    console.warn('saveCustomer: backend unavailable, saving to localStorage:', e.message);
 
-      if (customerData._id) {
-        localCustomers = localCustomers.map(c => c._id === customerData._id ? { ...c, ...customerData } : c);
-      } else {
-        const newCust = {
-          ...customerData,
-          _id: 'local_' + Date.now(),
-          createdAt: new Date().toISOString()
-        };
-        delete newCust._id;
-        newCust._id = 'local_' + Date.now();
-        localCustomers.push(newCust);
-        customerData = newCust;
+    const customers = localGetCustomers();
+    let customer;
+
+    if (customerData._id) {
+      const idx = customers.findIndex(c => c._id === customerData._id);
+      if (idx >= 0) {
+        customers[idx] = { ...customers[idx], ...customerData };
+        customer = customers[idx];
       }
-      localStorage.setItem(LOCAL_CUSTOMERS_KEY, JSON.stringify(localCustomers));
-      return customerData;
-    } catch (fallbackErr) {
-      console.error('LocalStorage fallback error:', fallbackErr);
-      return null;
     }
+
+    if (!customer) {
+      customer = {
+        ...customerData,
+        _id: 'local_' + Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+      delete customer._id;
+      customer._id = 'local_' + Date.now();
+      customers.push(customer);
+    }
+
+    localSaveCustomers(customers);
+    return customer;
   }
 }
 
 /**
- * Delete a customer by ID in MongoDB server
+ * Delete a customer by ID (supports local_ prefix)
  */
 export async function deleteCustomer(id) {
   try {
-    if (id.startsWith('local_')) {
-      const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-      if (stored) {
-        let localCustomers = JSON.parse(stored);
-        localCustomers = localCustomers.filter(c => c._id !== id);
-        localStorage.setItem(LOCAL_CUSTOMERS_KEY, JSON.stringify(localCustomers));
-      }
+    if (String(id).startsWith('local_')) {
+      const customers = localGetCustomers().filter(c => c._id !== id);
+      localSaveCustomers(customers);
       return true;
     }
 
-    const res = await fetch(`${CUSTOMERS_API_URL}/${id}`, {
-      method: 'DELETE',
-    });
-    if (!res.ok) throw new Error('Failed to delete customer');
-    
-    // Also remove from local fallback if present
-    const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-    if (stored) {
-      let localCustomers = JSON.parse(stored);
-      localCustomers = localCustomers.filter(c => c._id !== id);
-      localStorage.setItem(LOCAL_CUSTOMERS_KEY, JSON.stringify(localCustomers));
-    }
+    const res = await fetch(`${CUSTOMERS_API}/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+
+    const customers = localGetCustomers().filter(c => c._id !== id);
+    localSaveCustomers(customers);
     return true;
   } catch (e) {
-    console.error('Error deleting customer from MongoDB backend:', e);
-    // Remove from local fallback
-    const stored = localStorage.getItem(LOCAL_CUSTOMERS_KEY);
-    if (stored) {
-      let localCustomers = JSON.parse(stored);
-      localCustomers = localCustomers.filter(c => c._id !== id);
-      localStorage.setItem(LOCAL_CUSTOMERS_KEY, JSON.stringify(localCustomers));
-    }
+    console.warn('deleteCustomer: error, removing from localStorage:', e.message);
+    const customers = localGetCustomers().filter(c => c._id !== id);
+    localSaveCustomers(customers);
     return true;
   }
 }
 
+// ─────────────────────── ENQUIRIES ───────────────────────
+
+export async function getEnquiries() {
+  try {
+    const res = await fetch(ENQUIRIES_API);
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.warn('Enquiries: backend unavailable:', e.message);
+    return [];
+  }
+}

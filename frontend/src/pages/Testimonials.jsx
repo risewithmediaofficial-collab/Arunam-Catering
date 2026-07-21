@@ -5,11 +5,11 @@ import SectionHeading from '../components/ui/SectionHeading'
 
 const testimonials = [
   { name: 'Priya Ramachandran', role: 'Bride, Wedding 2024', text: 'Arunam Catering made our wedding day absolutely perfect. Every guest complimented the quality and freshness. Professional staff and elegant presentation throughout.' },
-  { name: 'Karthik Subramaniam', role: 'Corporate Event Manager', text: 'We\'ve used Arunam Catering for all our corporate events in Chennai for 3 years. On-time delivery, hygienic preparation, and professional service — truly unmatched.' },
+  { name: 'Karthik Subramaniam', role: 'Corporate Event Manager', text: 'We\'ve used Arunam Catering for all our corporate events in Tamilnadu for 3 years. On-time delivery, hygienic preparation, and professional service — truly unmatched.' },
   { name: 'Deepa Murugan', role: 'Mother, Baby Shower', text: 'The customised menu for our daughter\'s baby shower was beyond expectations. Fresh ingredients, beautiful presentation, and the staff were warm and friendly.' },
   { name: 'Rajesh Venkataraman', role: 'Family Function Host', text: '500+ guests and Arunam Catering handled everything seamlessly. Food was delicious, served hot and on time. The team\'s coordination was absolutely exceptional.' },
   { name: 'Anitha Krishnamoorthy', role: 'Bride\'s Mother, Reception', text: 'Excellent food and professional service from start to finish. The authentic South Indian spread was flavourful and well-presented. Guests are still talking about it!' },
-  { name: 'Suresh Balakrishnan', role: 'Corporate HR Manager', text: 'Best catering in Chennai for corporate events. Punctual, professional, consistently excellent food quality. Highly recommended for any business event.' },
+  { name: 'Suresh Balakrishnan', role: 'Corporate HR Manager', text: 'Best catering in Tamilnadu for corporate events. Punctual, professional, consistently excellent food quality. Highly recommended for any business event.' },
   { name: 'Meena Sundaram', role: 'Mother of Bride', text: 'From initial planning to the last plate served, Arunam Catering exceeded every expectation. The banana leaf lunch spread was the highlight of our reception.' },
   { name: 'Arun Selvam', role: 'Event Organizer', text: 'I\'ve worked with many caterers but Arunam Catering stands apart. Managing 800+ guest events without hiccups is a testament to their experience and expertise.' },
   { name: 'Kavitha Rajan', role: 'Birthday Party Host', text: 'Wonderful service for our daughter\'s birthday. Fresh food, generous portions, and very helpful staff throughout. We\'ll definitely book them again.' },
@@ -65,7 +65,7 @@ export default function Testimonials() {
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, j) => (
                     <svg key={j} width="12" height="12" viewBox="0 0 24 24" fill="#FF5C2B">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                   ))}
                 </div>

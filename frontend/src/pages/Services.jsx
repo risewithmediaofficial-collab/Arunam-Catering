@@ -15,7 +15,7 @@ const services = [
     title: 'Wedding Catering',
     eyebrow: 'Premium Service',
     img: coupleDining,
-    desc: 'Chennai\'s most trusted wedding caterers. Authentic South Indian menus, elegant presentation, and flawless execution for your most important day.',
+    desc: 'Tamilnadu\'s most trusted wedding caterers. Authentic South Indian menus, elegant presentation, and flawless execution for your most important day.',
     highlights: ['South Indian multi-cuisine menus', 'Banana leaf & fine dining setups', 'Live cooking counters', 'Custom menu planning', '300–2000+ guests capacity', 'Experienced wedding team'],
     stats: [{ n: '5,000+', l: 'Weddings' }, { n: '4.9★', l: 'Rating' }],
     reverse: false,
@@ -36,7 +36,7 @@ const services = [
     eyebrow: 'Traditional Service',
     img: welcomeDrinks,
     desc: 'Mark your engagement with authentic South Indian flavours. Comprehensive menu planning and professional coordination for your ceremony.',
-    highlights: ['Traditional ceremony menus', 'Family function specialists', 'Professional coordination', 'Custom menu creation', 'Local Chennai expertise', 'Smooth event management'],
+    highlights: ['Traditional ceremony menus', 'Family function specialists', 'Professional coordination', 'Custom menu creation', 'Local Tamilnadu expertise', 'Smooth event management'],
     stats: [{ n: '1,000+', l: 'Engagements' }, { n: '25+', l: 'Years' }],
     reverse: false,
   },
@@ -168,7 +168,7 @@ export default function Services() {
       <PageHero
         eyebrow="Our Services"
         title="Catering for Every Celebration"
-        subtitle="From intimate family functions to grand weddings — professional catering excellence across Chennai."
+        subtitle="From intimate family functions to grand weddings — professional catering excellence across Tamilnadu."
         bgLabel="Services Hero"
       />
       {services.map((service, i) => (

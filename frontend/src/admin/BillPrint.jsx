@@ -211,7 +211,6 @@ export default function BillPrint() {
           </thead>
           <tbody>
             {rows.map((row, i) => (
-              <>
                 <tr
                   key={`row-${i}`}
                   style={{ background: i % 2 === 0 ? '#FFFDF9' : '#FDF6EC' }}
@@ -239,7 +238,6 @@ export default function BillPrint() {
                     ₹{fmt(row.amount)}
                   </td>
                 </tr>
-              </>
             ))}
           </tbody>
         </table>
