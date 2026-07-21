@@ -60,12 +60,15 @@ export default function AdminCustomers() {
 
     setSubmitting(true);
     const data = {
-      _id: editingId || undefined,
       name: name.trim(),
       mobile: mobile.trim(),
       address: address.trim(),
       email: email.trim()
     };
+
+    if (editingId) {
+      data._id = editingId;
+    }
 
     const res = await saveCustomer(data);
     setSubmitting(false);

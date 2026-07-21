@@ -193,6 +193,11 @@ app.post('/api/customers', async (req, res) => {
     const customerData = req.body;
     let customer;
 
+    // Remove empty/null _id to prevent Mongoose CastError on creation
+    if (!customerData._id || customerData._id === '' || customerData._id === 'null' || customerData._id === 'undefined') {
+      delete customerData._id;
+    }
+
     if (customerData._id) {
       customer = await Customer.findById(customerData._id);
     }
@@ -207,9 +212,11 @@ app.post('/api/customers', async (req, res) => {
 
     res.json(customer);
   } catch (error) {
+    console.error('Error saving customer:', error);
     res.status(500).json({ message: 'Error saving customer', error: error.message });
   }
 });
+
 
 // 3. Delete a customer
 app.delete('/api/customers/:id', async (req, res) => {
