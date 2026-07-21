@@ -1,46 +1,15 @@
-name: Docker Build & Deploy
+with:
+  host: ${{ secrets.HOST }}
+  username: ${{ secrets.USERNAME }}
+  key: ${{ secrets.SSH_KEY }}
+  port: 22
+  script: |
+    set -e
+    cd ${{ secrets.TARGET_DIR }}
 
-on:
-  push:
-    branches:
-      - main
-      - master
-  workflow_dispatch:
+    git pull origin main
 
-jobs:
-  deploy:
-    name: Deploy to Server via SSH
-    runs-on: ubuntu-latest
+    docker compose down
+    docker compose up -d --build
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Execute Remote SSH Commands
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT || '22' }}
-          script: |
-            set -e
-            echo "==> Navigating to project directory: ${{ secrets.TARGET_DIR }}"
-            cd ${{ secrets.TARGET_DIR }}
-
-            echo "==> Pulling latest code..."
-            git pull origin main || git pull origin master
-
-            echo "==> Rebuilding and starting Docker containers..."
-            if command -v docker-compose &> /dev/null; then
-              docker-compose down
-              docker-compose up -d --build
-            else
-              docker compose down
-              docker compose up -d --build
-            fi
-
-            echo "==> Pruning unused Docker images..."
-            docker image prune -f
-
-            echo "==> Deployment finished successfully!"
+    docker image prune -f
