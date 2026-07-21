@@ -1,15 +1,35 @@
-with:
-  host: ${{ secrets.HOST }}
-  username: ${{ secrets.USERNAME }}
-  key: ${{ secrets.SSH_KEY }}
-  port: 22
-  script: |
-    set -e
-    cd ${{ secrets.TARGET_DIR }}
+name: Docker Build & Deploy
 
-    git pull origin main
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-    docker compose down
-    docker compose up -d --build
+jobs:
+  deploy:
+    name: Deploy to Server via SSH
+    runs-on: ubuntu-latest
 
-    docker image prune -f
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Execute Remote SSH Commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            cd ${{ secrets.TARGET_DIR }}
+
+            git pull origin main || git pull origin master
+
+            docker compose down
+            docker compose up -d --build
+
+            docker image prune -f
