@@ -117,11 +117,9 @@ export default function AdminDashboard() {
       {/* Bill List Card */}
       <div className="admin-card overflow-hidden bg-white border border-gray-200 shadow-sm">
         {/* Table Top Bar */}
-        <div className="p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-lg font-bold text-gray-800">Recent Catering Bills</h2>
-
-          {/* Search bar */}
-          <div className="relative max-w-md w-full sm:w-72">
+        <div className="p-4 md:p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h2 className="text-base md:text-lg font-bold text-gray-800">Recent Catering Bills</h2>
+          <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -133,91 +131,110 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Invoice Table */}
-        <div className="overflow-x-auto">
-          {filteredBills.length === 0 ? (
-            <div className="p-12 text-center text-gray-400 space-y-3">
-              <ReceiptText className="w-12 h-12 mx-auto text-gray-300" />
-              <p className="font-semibold text-base text-gray-600">No bills found</p>
-              <p className="text-xs text-gray-400">Create a new manual bill to get started.</p>
+        {filteredBills.length === 0 ? (
+          <div className="p-12 text-center text-gray-400 space-y-3">
+            <ReceiptText className="w-12 h-12 mx-auto text-gray-300" />
+            <p className="font-semibold text-base text-gray-600">No bills found</p>
+            <p className="text-xs text-gray-400">Create a new manual bill to get started.</p>
+          </div>
+        ) : (
+          <>
+            {/* Mobile cards (hidden on md+) */}
+            <div className="md:hidden divide-y divide-gray-100">
+              {filteredBills.map((b) => (
+                <div key={b.id} className="p-4 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <p className="font-bold text-gray-900 text-sm">#{b.sno} — {b.customer?.name}</p>
+                      <p className="text-xs text-gray-500">{b.customer?.mobile}</p>
+                    </div>
+                    <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold ${b.status === 'Paid' ? 'bg-green-100 text-green-700' : b.status === 'Sent' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                      {b.status || 'Draft'}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                    <span>📅 {b.eventDate ? new Date(b.eventDate).toLocaleDateString('en-IN') : 'N/A'}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-[#FF5C2B]/10 text-[#FF5C2B] font-semibold">{b.functionType || 'General'}</span>
+                    <span>B:{b.breakfastPeople||0} L:{b.lunchPeople||0} D:{b.dinnerPeople||0}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-gray-900 text-sm">₹{(b.grandTotal || 0).toLocaleString('en-IN')}</span>
+                    <div className="flex items-center gap-2">
+                      <Link to={`/admin/bill/${b.id}/print`} className="p-2 bg-gray-100 hover:bg-[#FF5C2B]/10 text-gray-600 hover:text-[#FF5C2B] rounded-lg transition-all">
+                        <Printer className="w-4 h-4" />
+                      </Link>
+                      <Link to={`/admin/bill/edit/${b.id}`} className="p-2 bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 rounded-lg transition-all">
+                        <Edit2 className="w-4 h-4" />
+                      </Link>
+                      <button onClick={() => handleDelete(b.id)} className="p-2 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-500 rounded-lg transition-all cursor-pointer">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : (
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
-                  <th className="py-4 px-6">S.No</th>
-                  <th className="py-4 px-6">Customer</th>
-                  <th className="py-4 px-6">Event Date</th>
-                  <th className="py-4 px-6">Function Type</th>
-                  <th className="py-4 px-6 text-right">Plates B & L & D</th>
-                  <th className="py-4 px-6 text-right">Total Amount</th>
-                  <th className="py-4 px-6 text-center">Status</th>
-                  <th className="py-4 px-6 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-150 text-sm">
-                {filteredBills.map((b) => (
-                  <tr key={b.id} className="hover:bg-gray-50/50 transition-colors duration-150 text-gray-700">
-                    <td className="py-4 px-6 font-bold text-gray-900">#{b.sno}</td>
-                    <td className="py-4 px-6">
-                      <div className="font-bold text-gray-900">{b.customer?.name}</div>
-                      <div className="text-xs text-gray-500 mt-0.5">{b.customer?.mobile}</div>
-                    </td>
-                    <td className="py-4 px-6 text-gray-600">
-                      {b.eventDate ? new Date(b.eventDate).toLocaleDateString('en-IN') : 'N/A'}
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FF5C2B]/10 text-[#FF5C2B]">
-                        {b.functionType || 'General Function'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-right font-medium text-gray-600">
-                      B: {b.breakfastPeople || 0} | L: {b.lunchPeople || 0} | D: {b.dinnerPeople || 0}
-                    </td>
-                    <td className="py-4 px-6 text-right font-bold text-gray-900">₹{(b.grandTotal || 0).toLocaleString('en-IN')}</td>
-                    <td className="py-4 px-6 text-center">
-                      <span
-                        className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${b.status === 'Paid'
-                          ? 'bg-green-100 text-green-700 border border-green-200'
-                          : b.status === 'Sent'
-                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
-                            : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                          }`}
-                      >
-                        {b.status || 'Draft'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <div className="flex items-center justify-center gap-3">
-                        <Link
-                          to={`/admin/bill/${b.id}/print`}
-                          title="Print / View Invoice"
-                          className="p-2 bg-gray-100 hover:bg-[#FF5C2B]/10 text-gray-600 hover:text-[#FF5C2B] rounded-lg transition-all"
-                        >
-                          <Printer className="w-4 h-4" />
-                        </Link>
-                        <Link
-                          to={`/admin/bill/edit/${b.id}`}
-                          title="Edit Bill"
-                          className="p-2 bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 rounded-lg transition-all"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(b.id)}
-                          title="Delete Bill"
-                          className="p-2 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-500 rounded-lg transition-all cursor-pointer"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+
+            {/* Desktop table (hidden on mobile) */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                    <th className="py-4 px-6">S.No</th>
+                    <th className="py-4 px-6">Customer</th>
+                    <th className="py-4 px-6">Event Date</th>
+                    <th className="py-4 px-6">Function Type</th>
+                    <th className="py-4 px-6 text-right">Plates B &amp; L &amp; D</th>
+                    <th className="py-4 px-6 text-right">Total Amount</th>
+                    <th className="py-4 px-6 text-center">Status</th>
+                    <th className="py-4 px-6 text-center">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                </thead>
+                <tbody className="divide-y divide-gray-150 text-sm">
+                  {filteredBills.map((b) => (
+                    <tr key={b.id} className="hover:bg-gray-50/50 transition-colors duration-150 text-gray-700">
+                      <td className="py-4 px-6 font-bold text-gray-900">#{b.sno}</td>
+                      <td className="py-4 px-6">
+                        <div className="font-bold text-gray-900">{b.customer?.name}</div>
+                        <div className="text-xs text-gray-500 mt-0.5">{b.customer?.mobile}</div>
+                      </td>
+                      <td className="py-4 px-6 text-gray-600">
+                        {b.eventDate ? new Date(b.eventDate).toLocaleDateString('en-IN') : 'N/A'}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FF5C2B]/10 text-[#FF5C2B]">
+                          {b.functionType || 'General Function'}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-right font-medium text-gray-600">
+                        B: {b.breakfastPeople || 0} | L: {b.lunchPeople || 0} | D: {b.dinnerPeople || 0}
+                      </td>
+                      <td className="py-4 px-6 text-right font-bold text-gray-900">₹{(b.grandTotal || 0).toLocaleString('en-IN')}</td>
+                      <td className="py-4 px-6 text-center">
+                        <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${b.status === 'Paid' ? 'bg-green-100 text-green-700 border border-green-200' : b.status === 'Sent' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'}`}>
+                          {b.status || 'Draft'}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <div className="flex items-center justify-center gap-3">
+                          <Link to={`/admin/bill/${b.id}/print`} title="Print / View Invoice" className="p-2 bg-gray-100 hover:bg-[#FF5C2B]/10 text-gray-600 hover:text-[#FF5C2B] rounded-lg transition-all">
+                            <Printer className="w-4 h-4" />
+                          </Link>
+                          <Link to={`/admin/bill/edit/${b.id}`} title="Edit Bill" className="p-2 bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 rounded-lg transition-all">
+                            <Edit2 className="w-4 h-4" />
+                          </Link>
+                          <button onClick={() => handleDelete(b.id)} title="Delete Bill" className="p-2 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-500 rounded-lg transition-all cursor-pointer">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

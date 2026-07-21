@@ -4,7 +4,7 @@
 @theme {
   --font-display: "Zain", sans-serif;
   --font-body: "Nunito", sans-serif;
-  --color-gold: #FF5C2B; /* Re-map gold to brand orange for automatic subpage color shifts */
+  --color-gold: #FF5C2B;
   --color-gold-light: #FF825C;
   --color-gold-dark: #E04618;
   --color-cream: #FAF7F2;
@@ -13,7 +13,11 @@
   --color-border: #ECE5DB;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   font-family: "Nunito", sans-serif;
@@ -21,21 +25,29 @@ body {
   color: #111111;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Global Font Override & Pairings */
 *, ::before, ::after {
   font-family: "Nunito", sans-serif !important;
+  box-sizing: border-box;
 }
 
 /* Headlines & Serif styling mapped to Zain font */
-h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 *, 
-.font-serif, .font-serif *, 
-[style*="font-family: 'Playfair Display'"], 
+h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 *,
+.font-serif, .font-serif *,
+[style*="font-family: 'Playfair Display'"],
 [style*="fontFamily: 'Playfair Display'"],
 [style*="Playfair Display"] {
   font-family: "Zain", sans-serif !important;
 }
+
+/* ── Fluid Typography ── */
+h1 { font-size: clamp(1.6rem, 5vw, 3rem); }
+h2 { font-size: clamp(1.25rem, 3.5vw, 2.2rem); }
+h3 { font-size: clamp(1.05rem, 2.5vw, 1.5rem); }
+p  { font-size: clamp(0.82rem, 2vw, 1rem); }
 
 /* Glassmorphism helpers */
 .glass-panel {
@@ -52,8 +64,15 @@ h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 *,
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ── Mobile-safe image ── */
+img { max-width: 100%; height: auto; }
+
+/* ── Prevent horizontal overflow ── */
+section, div, main, article { max-width: 100%; }
+
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #FAF7F2; }
 ::-webkit-scrollbar-thumb { background: #FF5C2B; border-radius: 2px; }
 
 ::selection { background: rgba(255,92,43,0.12); }
+

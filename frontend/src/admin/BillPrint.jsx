@@ -132,14 +132,14 @@ export default function BillPrint() {
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {/* ── TOP HEADER ── */}
-        <div className="flex items-stretch">
+        <div className="flex flex-col sm:flex-row items-stretch">
           {/* Left: Logo + company */}
-          <div className="flex-1 p-7 flex flex-col justify-between">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1 p-5 md:p-7 flex flex-col justify-between">
+            <div className="flex items-center gap-3 mb-3">
               <img
                 src="/arunam_logo.png"
                 alt="Arunam Catering"
-                className="h-16 w-auto object-contain"
+                className="h-12 md:h-16 w-auto object-contain"
                 onError={(e) => (e.target.style.display = 'none')}
               />
             </div>
@@ -154,12 +154,12 @@ export default function BillPrint() {
 
           {/* Right: INVOICE block */}
           <div
-            className="flex flex-col items-end justify-center px-8 py-6 min-w-[200px]"
+            className="flex flex-col items-start sm:items-end justify-center px-6 sm:px-8 py-5 sm:py-6"
             style={{ background: '#3B1A0A' }}
           >
-            <p className="text-white font-black text-4xl tracking-widest uppercase">INVOICE</p>
-            <p className="text-[#F5C48A] font-bold text-base mt-1">No. #{String(bill.sno || 0).padStart(4, '0')}</p>
-            <div className="mt-4 text-right text-xs text-[#d4a472] space-y-1">
+            <p className="text-white font-black text-3xl md:text-4xl tracking-widest uppercase">INVOICE</p>
+            <p className="text-[#F5C48A] font-bold text-sm md:text-base mt-1">No. #{String(bill.sno || 0).padStart(4, '0')}</p>
+            <div className="mt-3 text-left sm:text-right text-xs text-[#d4a472] space-y-1">
               <p><span className="text-[#F5C48A] font-semibold">Date:</span> {invoiceDate}</p>
               <p><span className="text-[#F5C48A] font-semibold">Event:</span> {eventDate}</p>
               <p className="mt-2">
@@ -178,7 +178,7 @@ export default function BillPrint() {
         </div>
 
         {/* ── FROM / BILL TO ── */}
-        <div className="grid grid-cols-2 px-7 py-5 border-t border-b border-gray-200 gap-6 bg-[#fdfaf6]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 px-5 md:px-7 py-5 border-t border-b border-gray-200 gap-5 bg-[#fdfaf6]">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">From</p>
             <p className="text-sm font-bold text-gray-800">Arunam Catering Service</p>
@@ -198,7 +198,8 @@ export default function BillPrint() {
         </div>
 
         {/* ── ITEMS TABLE ── */}
-        <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[480px]">
           <thead>
             <tr style={{ background: '#C8995A' }}>
               <th className="py-3 px-4 text-white text-[10px] font-black uppercase tracking-wider w-10 text-center">#</th>
@@ -242,9 +243,10 @@ export default function BillPrint() {
             ))}
           </tbody>
         </table>
+        </div>
 
         {/* ── PAYMENT INFO + TOTALS ── */}
-        <div className="grid grid-cols-2 px-7 py-6 gap-8 border-t-2 border-[#C8995A]/30 bg-[#fdfaf6]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 px-5 md:px-7 py-5 gap-6 border-t-2 border-[#C8995A]/30 bg-[#fdfaf6]">
           {/* Payment Info */}
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Payment Info</p>
