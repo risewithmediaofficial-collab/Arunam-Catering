@@ -279,16 +279,16 @@ export default function BillPrint() {
 
                 <div className="p-4 bg-amber-50/10">
                   {bill.selectedBreakfastDishes && bill.selectedBreakfastDishes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 print:grid-cols-3">
+                    <div className="flex flex-col gap-1.5">
                       {bill.selectedBreakfastDishes.map((dish, idx) => (
                         <div
                           key={dish}
-                          className="flex items-center gap-2.5 bg-white p-2.5 rounded-lg border border-amber-100 text-xs font-semibold text-gray-800 shadow-2xs"
+                          className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-amber-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-amber-500 text-white font-bold flex items-center justify-center text-[10px] shrink-0">
                             {idx + 1}
                           </span>
-                          <span className="capitalize truncate">{dish}</span>
+                          <span className="capitalize">{dish}</span>
                         </div>
                       ))}
                     </div>
@@ -318,16 +318,16 @@ export default function BillPrint() {
 
                 <div className="p-4 bg-orange-50/10">
                   {bill.selectedLunchDishes && bill.selectedLunchDishes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 print:grid-cols-3">
+                    <div className="flex flex-col gap-1.5">
                       {bill.selectedLunchDishes.map((dish, idx) => (
                         <div
                           key={dish}
-                          className="flex items-center gap-2.5 bg-white p-2.5 rounded-lg border border-orange-100 text-xs font-semibold text-gray-800 shadow-2xs"
+                          className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-orange-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-[#FF5C2B] text-white font-bold flex items-center justify-center text-[10px] shrink-0">
                             {idx + 1}
                           </span>
-                          <span className="capitalize truncate">{dish}</span>
+                          <span className="capitalize">{dish}</span>
                         </div>
                       ))}
                     </div>
@@ -357,16 +357,16 @@ export default function BillPrint() {
 
                 <div className="p-4 bg-indigo-50/10">
                   {bill.selectedDinnerDishes && bill.selectedDinnerDishes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 print:grid-cols-3">
+                    <div className="flex flex-col gap-1.5">
                       {bill.selectedDinnerDishes.map((dish, idx) => (
                         <div
                           key={dish}
-                          className="flex items-center gap-2.5 bg-white p-2.5 rounded-lg border border-indigo-100 text-xs font-semibold text-gray-800 shadow-2xs"
+                          className="flex items-center gap-2.5 bg-white px-3 py-2 rounded-lg border border-indigo-100 text-xs font-semibold text-gray-800"
                         >
                           <span className="w-5 h-5 rounded-md bg-indigo-600 text-white font-bold flex items-center justify-center text-[10px] shrink-0">
                             {idx + 1}
                           </span>
-                          <span className="capitalize truncate">{dish}</span>
+                          <span className="capitalize">{dish}</span>
                         </div>
                       ))}
                     </div>
