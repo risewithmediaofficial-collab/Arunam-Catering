@@ -46,10 +46,9 @@ export default function AdminLayout({ children }) {
     <div className="admin-body min-h-screen flex flex-col md:flex-row relative">
       {/* Mobile Top Navbar */}
       <div className="md:hidden flex items-center justify-between p-4 bg-[#ffffff] border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-        <div className="flex items-center gap-2">
-          <span className="text-[#FF5C2B] font-bold text-lg">ARUNAM</span>
-          <span className="text-xs px-2 py-0.5 rounded bg-gray-150 text-[#FF5C2B] font-medium border border-gray-200">Catering</span>
-        </div>
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/arunam_logo.png" alt="Arunam Logo" className="h-10 w-auto object-contain" />
+        </Link>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 text-gray-500 hover:text-black"
@@ -66,9 +65,8 @@ export default function AdminLayout({ children }) {
       >
         {/* Brand logo */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <Link to="/" className="flex flex-col">
-            <span className="text-[#FF5C2B] font-extrabold text-xl tracking-wider">ARUNAM</span>
-            <span className="text-[10px] text-gray-500 tracking-[0.2em] uppercase font-semibold">Catering Admin</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/arunam_logo.png" alt="Arunam Logo" className="h-12 w-auto object-contain" />
           </Link>
           <button className="md:hidden text-gray-500" onClick={() => setSidebarOpen(false)}>
             <X className="w-5 h-5" />

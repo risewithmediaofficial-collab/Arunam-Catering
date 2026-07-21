@@ -1,0 +1,16 @@
+# Robots.txt for Arunam Catering Service
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /menu
+Allow: /gallery
+Allow: /testimonials
+Allow: /contact
+
+# Block admin panel from search engine indexing
+Disallow: /admin
+Disallow: /admin/*
+
+# Sitemap reference for Google Search Console
+Sitemap: https://arunamcatering.com/sitemap.xml
