@@ -2,19 +2,28 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import SectionHeading from '../ui/SectionHeading'
-import ImagePlaceholder from '../ui/ImagePlaceholder'
+import {
+  coupleDining,
+  grandHallDining,
+  guestsFeast,
+  bananaLeafSpread,
+  welcomeDrinks,
+  livePaanStall,
+  liveFruitStall,
+  gulabJamunTray,
+  serviceTeamInAction
+} from '../../assets/images'
 
 const items = [
-  { label: 'Traditional Elephant Welcome', wide: true },
-  { label: 'Wedding Decoration' },
-  { label: 'Couple Dining Setup' },
-  { label: 'Wedding Drum Show' },
-  { label: 'Live Juice Counter' },
-  { label: 'Reception Setup', wide: true },
-  { label: 'Personalized Dining Tables' },
-  { label: 'Food Service Staff' },
-  { label: 'Royal Dining Experience' },
+  { label: 'Grand Traditional Dining Setup', src: grandHallDining, wide: true },
+  { label: 'Wedding Couple Feast', src: coupleDining },
+  { label: 'Live Fruit Counter Stall', src: liveFruitStall },
+  { label: 'South Indian Banana Leaf Feast', src: bananaLeafSpread },
+  { label: 'Welcome Drinks Counter', src: welcomeDrinks },
+  { label: 'Catering Service Team in Action', src: serviceTeamInAction, wide: true },
+  { label: 'Guests Banana Leaf Dining', src: guestsFeast },
+  { label: 'Live Paan Counter Counter', src: livePaanStall },
+  { label: 'Golden Gulab Jamun Dessert Tray', src: gulabJamunTray },
 ]
 
 export default function GalleryPreview() {
@@ -60,20 +69,19 @@ export default function GalleryPreview() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.4, delay: i * 0.05 }}
-              className={`group overflow-hidden cursor-pointer relative ${item.wide ? 'col-span-2' : 'col-span-1'}`}
+              className={`group overflow-hidden cursor-pointer relative bg-neutral-900 ${item.wide ? 'col-span-2' : 'col-span-1'}`}
             >
-              <div className="absolute inset-0">
-                <ImagePlaceholder label={item.label} aspectRatio="" className="w-full h-full" />
-              </div>
+              <img
+                src={item.src}
+                alt={item.label}
+                className="w-full h-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+              />
               {/* Hover overlay */}
               <div
-                className="absolute inset-0 flex items-end p-4 transition-all duration-300"
-                style={{ background: 'rgba(24,24,24,0)' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(24,24,24,0.55)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(24,24,24,0)'}
+                className="absolute inset-0 flex items-end p-4 transition-all duration-300 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100"
               >
                 <p
-                  className="text-[11px] text-white tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+                  className="text-[11px] text-white font-medium tracking-wider transition-all duration-300 translate-y-2 group-hover:translate-y-0"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   {item.label}

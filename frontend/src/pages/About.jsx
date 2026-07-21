@@ -3,8 +3,8 @@ import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import SectionHeading from '../components/ui/SectionHeading'
-import ImagePlaceholder from '../components/ui/ImagePlaceholder'
 import PageHero from '../components/layout/PageHero'
+import { chefsServing, serviceTeamInAction, yellowDiningHall } from '../assets/images'
 
 const values = [
   { title: 'Authenticity', desc: 'Traditional South Indian recipes passed down through generations.' },
@@ -100,15 +100,15 @@ export default function About() {
             {/* Images */}
             <div className="relative">
               <div className="grid grid-cols-2 gap-3">
-                <div style={{ aspectRatio: '3/4', background: '#EDE5D8' }}>
-                  <ImagePlaceholder label="Our Kitchen" aspectRatio="aspect-[3/4]" className="w-full h-full" />
+                <div className="overflow-hidden rounded-2xl shadow-md" style={{ aspectRatio: '3/4' }}>
+                  <img src={chefsServing} alt="Our Kitchen & Chef Team" className="w-full h-full object-cover" />
                 </div>
                 <div className="space-y-3 mt-10">
-                  <div style={{ aspectRatio: '4/3', background: '#E0D4C0' }}>
-                    <ImagePlaceholder label="Our Team" aspectRatio="aspect-[4/3]" className="w-full h-full" />
+                  <div className="overflow-hidden rounded-2xl shadow-md" style={{ aspectRatio: '4/3' }}>
+                    <img src={serviceTeamInAction} alt="Our Service Team" className="w-full h-full object-cover" />
                   </div>
-                  <div style={{ aspectRatio: '1/1', background: '#EDE5D8' }}>
-                    <ImagePlaceholder label="Event Setup" aspectRatio="aspect-square" className="w-full h-full" />
+                  <div className="overflow-hidden rounded-2xl shadow-md" style={{ aspectRatio: '1/1' }}>
+                    <img src={yellowDiningHall} alt="Grand Event Setup" className="w-full h-full object-cover" />
                   </div>
                 </div>
               </div>

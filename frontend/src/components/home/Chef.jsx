@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Users, CheckCircle2, Award, Clock, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { coupleDining } from '../../assets/images'
 
 export default function Chef() {
   return (
@@ -12,8 +13,8 @@ export default function Chef() {
           <div className="lg:col-span-5 relative group">
             <div className="relative overflow-hidden rounded-3xl shadow-xl aspect-[4/5] bg-neutral-900">
               <img
-                src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=600&h=750&q=80"
-                alt="Premium Catering Event Food"
+                src={coupleDining}
+                alt="Arunam Catering Wedding Celebration"
                 className="w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />

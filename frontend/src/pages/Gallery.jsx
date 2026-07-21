@@ -3,29 +3,44 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import PageHero from '../components/layout/PageHero'
 import SectionHeading from '../components/ui/SectionHeading'
-import ImagePlaceholder from '../components/ui/ImagePlaceholder'
+import {
+  dosaBananaleaf,
+  welcomeDrinks,
+  chefsServing,
+  coupleDining,
+  livePaanStall,
+  liveFruitStall,
+  grandHallDining,
+  guestsFeast,
+  bananaLeafSpread,
+  sweetPaanLeaf,
+  riceSambar,
+  drumstickCurryRice,
+  gulabJamunTray,
+  serviceTeamInAction,
+  yellowDiningHall,
+  diningHallPerspective
+} from '../assets/images'
 
-const categories = ['All', 'Weddings', 'Corporate', 'Setups', 'Food', 'Decor']
+const categories = ['All', 'Weddings', 'Corporate', 'Setups', 'Food', 'Live Stalls']
 
 const galleryItems = [
-  { label: 'Traditional Elephant Welcome', cat: 'Weddings', wide: true },
-  { label: 'Wedding Decoration', cat: 'Decor' },
-  { label: 'Couple Dining Setup', cat: 'Setups' },
-  { label: 'Wedding Drum Show', cat: 'Weddings' },
-  { label: 'Live Juice Counter', cat: 'Food' },
-  { label: 'Reception Setup', cat: 'Setups', wide: true },
-  { label: 'Personalized Dining Tables', cat: 'Setups' },
-  { label: 'Food Service Staff', cat: 'Weddings' },
-  { label: 'Royal Dining Experience', cat: 'Setups', wide: true },
-  { label: 'Grand Wedding Stage', cat: 'Decor' },
-  { label: 'Traditional Seervarisai Display', cat: 'Weddings' },
-  { label: 'Beverage Station', cat: 'Food' },
-  { label: 'Hygienic Plate Setup', cat: 'Food' },
-  { label: 'Corporate Lunch Spread', cat: 'Corporate' },
-  { label: 'Banana Leaf Meal', cat: 'Food' },
-  { label: 'Dessert Counter', cat: 'Food' },
-  { label: 'Live Cooking Station', cat: 'Food' },
-  { label: 'Wedding Mandap Setup', cat: 'Decor' },
+  { label: 'Grand Traditional Dining Hall', src: grandHallDining, cat: 'Setups', wide: true },
+  { label: 'Bride & Groom Wedding Feast', src: coupleDining, cat: 'Weddings' },
+  { label: 'Crispy South Indian Dosa', src: dosaBananaleaf, cat: 'Food' },
+  { label: 'Service Staff Serving Guests', src: serviceTeamInAction, cat: 'Weddings' },
+  { label: 'Welcome Drink Cups Counter', src: welcomeDrinks, cat: 'Live Stalls' },
+  { label: 'South Indian Full Banana Leaf Feast', src: bananaLeafSpread, cat: 'Food', wide: true },
+  { label: 'Live Paan Counter Stall', src: livePaanStall, cat: 'Live Stalls' },
+  { label: 'Live Fruit Counter Stall', src: liveFruitStall, cat: 'Live Stalls' },
+  { label: 'Catering Chefs in Action', src: chefsServing, cat: 'Weddings', wide: true },
+  { label: 'Yellow Dining Hall Arrangement', src: yellowDiningHall, cat: 'Setups' },
+  { label: 'Golden Gulab Jamun Dessert Cups', src: gulabJamunTray, cat: 'Food' },
+  { label: 'Guests Enjoying Catering Feast', src: guestsFeast, cat: 'Corporate' },
+  { label: 'Paan & Sweet Betel Leaf', src: sweetPaanLeaf, cat: 'Live Stalls' },
+  { label: 'Authentic Rice & Sambar', src: riceSambar, cat: 'Food' },
+  { label: 'Drumstick Curry & Rice Meal', src: drumstickCurryRice, cat: 'Food' },
+  { label: 'Perspective Dining Hall Setup', src: diningHallPerspective, cat: 'Setups' },
 ]
 
 export default function Gallery() {
@@ -81,25 +96,22 @@ export default function Gallery() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.03 }}
                 onClick={() => setLightbox(item)}
-                className={`overflow-hidden group cursor-pointer relative bg-[#EDE5D8] ${item.wide ? 'col-span-2' : ''}`}
+                className={`overflow-hidden group cursor-pointer relative bg-neutral-900 ${item.wide ? 'col-span-2' : ''}`}
                 style={{ aspectRatio: item.wide ? '2/1' : '1/1' }}
               >
-                <ImagePlaceholder label={item.label} className="absolute inset-0 w-full h-full" />
+                <img src={item.src} alt={item.label} className="w-full h-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105" />
                 <div
-                  className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all duration-300"
-                  style={{ background: 'rgba(24,24,24,0)', backdropFilter: 'blur(0px)' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(24,24,24,0.55)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(24,24,24,0)' }}
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all duration-300 bg-black/50 opacity-0 group-hover:opacity-100"
                 >
                   <p
-                    className="text-[11px] text-white tracking-wider text-center px-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300"
+                    className="text-[11px] text-white tracking-wider text-center px-3 translate-y-2 group-hover:translate-y-0 transition-all duration-300 font-medium"
                     style={{ fontFamily: 'Inter, sans-serif' }}
                   >
                     {item.label}
                   </p>
                   <span
-                    className="text-[9px] tracking-[0.25em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ color: '#FF5C2B', fontFamily: 'Inter, sans-serif' }}
+                    className="text-[9px] tracking-[0.25em] uppercase text-[#FF5C2B]"
+                    style={{ fontFamily: 'Inter, sans-serif' }}
                   >
                     {item.cat}
                   </span>
@@ -134,15 +146,15 @@ export default function Gallery() {
               initial={{ scale: 0.93 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.93 }}
-              className="max-w-2xl w-full"
+              className="max-w-3xl w-full overflow-hidden rounded-2xl bg-neutral-900 p-2"
               onClick={e => e.stopPropagation()}
             >
-              <div style={{ aspectRatio: '4/3', background: '#222' }}>
-                <ImagePlaceholder label={lightbox.label} aspectRatio="aspect-[4/3]" className="w-full h-full" />
+              <div style={{ aspectRatio: '16/10' }} className="overflow-hidden rounded-xl">
+                <img src={lightbox.src} alt={lightbox.label} className="w-full h-full object-cover" />
               </div>
-              <div className="flex items-center justify-between mt-3 px-1">
-                <p className="text-[0.88rem] text-white" style={{ fontFamily: 'Inter, sans-serif' }}>{lightbox.label}</p>
-                <span className="text-[10px] tracking-widest uppercase" style={{ color: '#FF5C2B', fontFamily: 'Inter, sans-serif' }}>{lightbox.cat}</span>
+              <div className="flex items-center justify-between mt-3 px-3 pb-2">
+                <p className="text-[0.88rem] font-semibold text-white" style={{ fontFamily: 'Inter, sans-serif' }}>{lightbox.label}</p>
+                <span className="text-[10px] tracking-widest uppercase text-[#FF5C2B]" style={{ fontFamily: 'Inter, sans-serif' }}>{lightbox.cat}</span>
               </div>
             </motion.div>
           </motion.div>

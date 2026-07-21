@@ -1,33 +1,39 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronDown } from 'lucide-react'
+import {
+  dosaBananaleaf,
+  welcomeDrinks,
+  bananaLeafSpread,
+  gulabJamunTray
+} from '../../assets/images'
 
 const floatingFoods = [
   {
-    src: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=250&h=250&q=80",
-    alt: "Gourmet Pasta",
-    className: "absolute top-[12%] left-[6%] w-24 h-24 md:w-32 md:h-32 xl:w-36 xl:h-36 rounded-full border-4 border-white shadow-2xl z-10",
+    src: dosaBananaleaf,
+    alt: "Crispy South Indian Dosa",
+    className: "absolute top-[12%] left-[6%] w-24 h-24 md:w-32 md:h-32 xl:w-36 xl:h-36 rounded-full border-4 border-white shadow-2xl z-10 overflow-hidden",
     animate: { y: [0, -10, 0], rotate: [0, 5, 0] },
     delay: 0
   },
   {
-    src: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=250&h=250&q=80",
-    alt: "Grilled Skewers",
-    className: "absolute bottom-[16%] left-[8%] w-26 h-26 md:w-34 md:h-34 xl:w-38 xl:h-38 rounded-full border-4 border-white shadow-2xl z-10",
+    src: welcomeDrinks,
+    alt: "Welcome Drinks Counter",
+    className: "absolute bottom-[16%] left-[8%] w-26 h-26 md:w-34 md:h-34 xl:w-38 xl:h-38 rounded-full border-4 border-white shadow-2xl z-10 overflow-hidden",
     animate: { y: [0, 12, 0], rotate: [0, -4, 0] },
     delay: 0.5
   },
   {
-    src: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=250&h=250&q=80",
-    alt: "Fresh Salad",
-    className: "absolute top-[15%] right-[6%] w-24 h-24 md:w-32 md:h-32 xl:w-36 xl:h-36 rounded-full border-4 border-white shadow-2xl z-10",
+    src: bananaLeafSpread,
+    alt: "South Indian Banana Leaf Feast",
+    className: "absolute top-[15%] right-[6%] w-24 h-24 md:w-32 md:h-32 xl:w-36 xl:h-36 rounded-full border-4 border-white shadow-2xl z-10 overflow-hidden",
     animate: { y: [0, -12, 0], rotate: [0, -6, 0] },
     delay: 0.2
   },
   {
-    src: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=250&h=250&q=80",
-    alt: "Healthy Meal",
-    className: "absolute bottom-[18%] right-[8%] w-26 h-26 md:w-34 md:h-34 xl:w-38 xl:h-38 rounded-full border-4 border-white shadow-2xl z-10",
+    src: gulabJamunTray,
+    alt: "Gulab Jamun Catering Dessert",
+    className: "absolute bottom-[18%] right-[8%] w-26 h-26 md:w-34 md:h-34 xl:w-38 xl:h-38 rounded-full border-4 border-white shadow-2xl z-10 overflow-hidden",
     animate: { y: [0, 10, 0], rotate: [0, 4, 0] },
     delay: 0.7
   }

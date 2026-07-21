@@ -3,15 +3,22 @@ import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
-import ImagePlaceholder from '../ui/ImagePlaceholder'
+import {
+  coupleDining,
+  guestsFeast,
+  welcomeDrinks,
+  grandHallDining,
+  gulabJamunTray,
+  bananaLeafSpread
+} from '../../assets/images'
 
 const services = [
-  { id: 'wedding',    title: 'Wedding Catering',       desc: 'Make your wedding day extra special with exquisite menu and elegant presentation.', tag: 'Popular', path: '/services/wedding' },
-  { id: 'corporate', title: 'Corporate Catering',      desc: 'Impress clients and boost team morale with professional corporate catering solutions.', tag: null, path: '/services/corporate' },
-  { id: 'engagement',title: 'Engagement Catering',     desc: 'Celebrate your love story with romantic and sophisticated catering arrangements.', tag: null, path: '/services/engagement' },
-  { id: 'reception', title: 'Reception Catering',      desc: 'Create lasting impressions with grand reception catering for any occasion.',      tag: null, path: '/services/reception' },
-  { id: 'birthday',  title: 'Birthday Party Catering',  desc: 'Make birthdays memorable with fun, festive, and delicious party catering.',       tag: null, path: '/services/birthday' },
-  { id: 'babyshower',title: 'Baby Shower Catering',    desc: 'Welcome the little one with delightful treats and charming food displays.',            tag: null, path: '/services/baby-shower' },
+  { id: 'wedding',    title: 'Wedding Catering',       desc: 'Make your wedding day extra special with exquisite menu and elegant presentation.', tag: 'Popular', path: '/services/wedding', img: coupleDining },
+  { id: 'corporate', title: 'Corporate Catering',      desc: 'Impress clients and boost team morale with professional corporate catering solutions.', tag: null, path: '/services/corporate', img: guestsFeast },
+  { id: 'engagement',title: 'Engagement Catering',     desc: 'Celebrate your love story with romantic and sophisticated catering arrangements.', tag: null, path: '/services/engagement', img: welcomeDrinks },
+  { id: 'reception', title: 'Reception Catering',      desc: 'Create lasting impressions with grand reception catering for any occasion.',      tag: null, path: '/services/reception', img: grandHallDining },
+  { id: 'birthday',  title: 'Birthday Party Catering',  desc: 'Make birthdays memorable with fun, festive, and delicious party catering.',       tag: null, path: '/services/birthday', img: gulabJamunTray },
+  { id: 'babyshower',title: 'Baby Shower Catering',    desc: 'Welcome the little one with delightful treats and charming food displays.',            tag: null, path: '/services/baby-shower', img: bananaLeafSpread },
 ]
 
 function ServiceCard({ service, index }) {
@@ -26,10 +33,12 @@ function ServiceCard({ service, index }) {
       style={{ border: '1px solid #E6DDD2' }}
     >
       {/* Image */}
-      <div className="overflow-hidden" style={{ aspectRatio: '4/3' }}>
-        <div className="w-full h-full transition-transform duration-500 group-hover:scale-[1.04]">
-          <ImagePlaceholder label={service.title} aspectRatio="aspect-[4/3]" className="w-full h-full" />
-        </div>
+      <div className="overflow-hidden bg-neutral-900" style={{ aspectRatio: '4/3' }}>
+        <img
+          src={service.img}
+          alt={service.title}
+          className="w-full h-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-[1.04]"
+        />
       </div>
 
       {service.tag && (
