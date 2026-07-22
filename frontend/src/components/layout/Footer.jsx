@@ -108,7 +108,7 @@ export default function Footer() {
             <div className="flex gap-3">
               {[
                 { Icon: InstagramIcon, href: 'https://www.instagram.com/arunam_catering?igsh=ZmdhMHpleDV3b29z', label: 'Instagram', external: true },
-                { Icon: FacebookIcon, href: '#', label: 'Facebook' },
+                { Icon: FacebookIcon, href: 'https://www.facebook.com/profile.php?id=61591964292284', label: 'Facebook', external: true },
                 { Icon: YoutubeIcon, href: '#', label: 'YouTube' },
               ].map(({ Icon, href, label, external }) => (
                 <a
