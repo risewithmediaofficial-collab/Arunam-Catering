@@ -168,17 +168,15 @@ export default function Hero() {
         </motion.div>
 
         {/* Mobile-only Food Grid (for small screen layout support) */}
-        <div className="grid grid-cols-2 gap-4 mt-12 md:hidden">
-          <img
-            src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=200&h=200&q=80"
-            alt="Food plate"
-            className="w-full aspect-square object-cover rounded-2xl border-2 border-white shadow-md"
-          />
-          <img
-            src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=200&h=200&q=80"
-            alt="Food plate"
-            className="w-full aspect-square object-cover rounded-2xl border-2 border-white shadow-md"
-          />
+        <div className="grid grid-cols-2 gap-3 mt-10 md:hidden max-w-xs mx-auto">
+          {floatingFoods.map((food, idx) => (
+            <img
+              key={idx}
+              src={food.src}
+              alt={food.alt}
+              className="w-full aspect-square object-cover rounded-2xl border-2 border-white shadow-md"
+            />
+          ))}
         </div>
 
         {/* Scroll indicator */}
