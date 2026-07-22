@@ -14,6 +14,7 @@ export default function ImagePlaceholder({
       <img
         src={src}
         alt={alt}
+        loading="lazy"
         className={`w-full h-full object-cover ${className}`}
       />
     )

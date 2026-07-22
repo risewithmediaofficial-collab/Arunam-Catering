@@ -1,16 +1,30 @@
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
-import Home from './pages/Home'
-import About from './pages/About'
-import Services from './pages/Services'
-import Menu from './pages/Menu'
-import Gallery from './pages/Gallery'
-import Testimonials from './pages/Testimonials'
-import Contact from './pages/Contact'
-import NotFound from './pages/NotFound'
-import AdminApp from './admin/AdminApp'
+
+// Lazy load all pages for optimal code splitting & performance
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Services = lazy(() => import('./pages/Services'))
+const Menu = lazy(() => import('./pages/Menu'))
+const Gallery = lazy(() => import('./pages/Gallery'))
+const Testimonials = lazy(() => import('./pages/Testimonials'))
+const Contact = lazy(() => import('./pages/Contact'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const AdminApp = lazy(() => import('./admin/AdminApp'))
+
+// Elegant Page Loader Fallback
+function PageLoader() {
+  return (
+    <div className="min-h-[70vh] flex flex-col items-center justify-center py-20 px-4 bg-[#FAF7F2]">
+      <div className="w-10 h-10 border-3 border-[#FF5C2B]/20 border-t-[#FF5C2B] rounded-full animate-spin mb-4" />
+      <span className="text-[11px] tracking-[0.25em] uppercase font-bold text-[#7A7269]" style={{ fontFamily: 'Inter, sans-serif' }}>
+        Loading...
+      </span>
+    </div>
+  )
+}
 
 // Scroll to top on route change for all pages
 function ScrollToTop() {
@@ -63,17 +77,19 @@ function Layout() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/:id" element={<Services />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:id" element={<Services />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
       <Footer />
       <WhatsAppFloat />
     </>
@@ -84,10 +100,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        <Route path="/admin/*" element={<AdminApp />} />
-        <Route path="*" element={<Layout />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/admin/*" element={<AdminApp />} />
+          <Route path="*" element={<Layout />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
