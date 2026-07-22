@@ -202,7 +202,7 @@ export default function BillPrint() {
                 </p>
                 <p className="flex items-center gap-1.5">
                   <Phone className="w-3.5 h-3.5 text-[#FF5C2B] shrink-0" />
-                  <span>+91 98848 89393, 98848 89394</span>
+                  <span>+91 81487 84305</span>
                 </p>
                 <p className="flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-[#FF5C2B] shrink-0" />
@@ -596,7 +596,7 @@ export default function BillPrint() {
               <div className="bg-[#FAF7F2] rounded-xl p-4 border border-[#ECE5DB] text-xs space-y-1">
                 <p className="font-extrabold text-[#FF5C2B] uppercase tracking-wider">Bank & GPay Payment Info</p>
                 <p className="text-gray-700 font-semibold">Account: Arunam Catering Services</p>
-                <p className="text-gray-600">GPay / PhonePe: +91 98848 89393</p>
+                <p className="text-gray-600">GPay / PhonePe: +91 81487 84305</p>
               </div>
             </div>
 

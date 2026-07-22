@@ -13,7 +13,7 @@ const faqItems = [
   },
   {
     q: "How can I make a reservation?",
-    a: "You can click the 'Book Catering' button on our website, fill out the contact form, or call/WhatsApp us directly at +91 98848 89393 to discuss your event details."
+    a: "You can click the 'Book Catering' button on our website, fill out the contact form, or call/WhatsApp us directly at +91 81487 84305 to discuss your event details."
   },
   {
     q: "Do you have vegetarian or vegan options?",

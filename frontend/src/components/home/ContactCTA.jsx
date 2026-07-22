@@ -55,7 +55,7 @@ export default function ContactCTA() {
 
             <div className="flex flex-col sm:flex-row gap-3 mb-7">
               <a
-                href="tel:+919884889393"
+                href="tel:+918148784305"
                 className="flex items-center justify-center gap-2.5 text-[11px] tracking-[0.18em] uppercase font-semibold px-7 py-3.5 transition-all duration-250"
                 style={{ background: '#181818', color: '#fff' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#FF5C2B'}
@@ -64,7 +64,7 @@ export default function ContactCTA() {
                 <Phone size={13} /> Call Us
               </a>
               <a
-                href="https://wa.me/919884889393"
+                href="https://wa.me/918148784305"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2.5 text-[11px] tracking-[0.18em] uppercase font-semibold px-7 py-3.5 transition-all duration-250"

@@ -45,7 +45,7 @@ function ScrollToTop() {
 function WhatsAppFloat() {
   return (
     <a
-      href="https://wa.me/919884889393"
+      href="https://wa.me/918148784305"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

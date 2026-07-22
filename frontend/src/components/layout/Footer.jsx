@@ -64,7 +64,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <a
-              href="https://wa.me/919884889393"
+              href="https://wa.me/918148784305"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-[11px] tracking-[0.18em] uppercase font-bold px-6 py-3 rounded-full transition-all duration-300 shadow-sm"
@@ -187,8 +187,8 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4">
               {[
-                { href: 'tel:+919884889393', Icon: Phone, text: '+91 98848 89393' },
-                { href: 'https://wa.me/919884889393', Icon: MessageCircle, text: 'WhatsApp: +91 98848 89393', external: true },
+                { href: 'tel:+918148784305', Icon: Phone, text: '+91 81487 84305' },
+                { href: 'https://wa.me/918148784305', Icon: MessageCircle, text: 'WhatsApp: +91 81487 84305', external: true },
                 { href: 'mailto:arunamcateringservice@gmail.com', Icon: Mail, text: 'arunamcateringservice@gmail.com' },
               ].map(({ href, Icon, text, external }) => (
                 <li key={text}>

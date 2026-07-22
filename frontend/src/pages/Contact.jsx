@@ -86,8 +86,8 @@ export default function Contact() {
 
               <div className="space-y-5">
                 {[
-                  { href: 'tel:+919884889393', Icon: Phone, label: 'Phone', value: '+91 98848 89393' },
-                  { href: 'https://wa.me/919884889393', Icon: MessageCircle, label: 'WhatsApp', value: '+91 98848 89393', external: true },
+                  { href: 'tel:+918148784305', Icon: Phone, label: 'Phone', value: '+91 81487 84305' },
+                  { href: 'https://wa.me/918148784305', Icon: MessageCircle, label: 'WhatsApp', value: '+91 81487 84305', external: true },
                   { href: 'mailto:arunamcateringservice@gmail.com', Icon: Mail, label: 'Email', value: 'arunamcateringservice@gmail.com' },
                 ].map(({ href, Icon, label, value, external }) => (
                   <a

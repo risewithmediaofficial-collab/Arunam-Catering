@@ -76,7 +76,7 @@ export default function Navbar() {
 
               {/* Call Icon */}
               <a
-                href="tel:+919884889393"
+                href="tel:+918148784305"
                 aria-label="Call Us"
                 className="text-[#111]/75 hover:text-[#FF5C2B] transition-colors p-1.5"
               >
@@ -132,11 +132,11 @@ export default function Navbar() {
               })}
             </nav>
             <div className="flex flex-col gap-4 mt-2">
-              <a href="tel:+919884889393" className="flex items-center gap-3 text-sm text-[#111]/70 font-semibold py-2">
+              <a href="tel:+918148784305" className="flex items-center gap-3 text-sm text-[#111]/70 font-semibold py-2">
                 <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-[#FF5C2B]">
                   <Phone size={14} />
                 </div>
-                <span>+91 98848 89393</span>
+                <span>+91 81487 84305</span>
               </a>
               <Link
                 to="/contact"

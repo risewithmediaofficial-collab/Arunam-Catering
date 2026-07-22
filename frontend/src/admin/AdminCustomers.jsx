@@ -202,7 +202,7 @@ export default function AdminCustomers() {
                 <input
                   type="tel"
                   required
-                  placeholder="e.g. 9884812345"
+                  placeholder="e.g. 8148712345"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
                   className="admin-input py-2 text-sm"
