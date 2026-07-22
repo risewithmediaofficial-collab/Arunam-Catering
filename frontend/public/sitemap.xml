@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://arunamcatering.com/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://arunamcatering.com/arunam_logo.png</image:loc>
+      <image:title>Arunam Catering Service Brand Logo</image:title>
+      <image:caption>Official logo of Arunam Catering Service - Best Marriage Caterers in Tamil Nadu</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://arunamcatering.com/chef_cartoon_vector.png</image:loc>
+      <image:title>Arunam Catering Master Chef Illustration</image:title>
+      <image:caption>Master Chef preparing authentic South Indian banana leaf feasts</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://arunamcatering.com/about</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://arunamcatering.com/arunam_logo.png</image:loc>
+      <image:title>Arunam Catering Kitchen Team</image:title>
+      <image:caption>Hygienic event kitchen setup and master chef team</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://arunamcatering.com/services</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://arunamcatering.com/menu</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://arunamcatering.com/gallery</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://arunamcatering.com/testimonials</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://arunamcatering.com/contact</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
