@@ -1,7 +1,9 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
+import useLockBodyScroll from '../../hooks/useLockBodyScroll'
 import {
   coupleDining,
   grandHallDining,
@@ -15,19 +17,24 @@ import {
 } from '../../assets/images'
 
 const items = [
-  { label: 'Grand Traditional Dining Setup', src: grandHallDining, wide: true },
-  { label: 'Wedding Couple Feast', src: coupleDining },
-  { label: 'Live Fruit Counter Stall', src: liveFruitStall },
-  { label: 'South Indian Banana Leaf Feast', src: bananaLeafSpread },
-  { label: 'Welcome Drinks Counter', src: welcomeDrinks },
-  { label: 'Catering Service Team in Action', src: serviceTeamInAction, wide: true },
-  { label: 'Guests Banana Leaf Dining', src: guestsFeast },
-  { label: 'Live Paan Counter Counter', src: livePaanStall },
-  { label: 'Golden Gulab Jamun Dessert Tray', src: gulabJamunTray },
+  { label: 'Grand Traditional Dining Setup', src: grandHallDining, wide: true, cat: 'Setups' },
+  { label: 'Wedding Couple Feast', src: coupleDining, cat: 'Wedding' },
+  { label: 'Live Fruit Counter Stall', src: liveFruitStall, cat: 'Live Stalls' },
+  { label: 'South Indian Banana Leaf Feast', src: bananaLeafSpread, cat: 'Food' },
+  { label: 'Welcome Drinks Counter', src: welcomeDrinks, cat: 'Live Stalls' },
+  { label: 'Catering Service Team in Action', src: serviceTeamInAction, wide: true, cat: 'Team' },
+  { label: 'Guests Banana Leaf Dining', src: guestsFeast, cat: 'Corporate' },
+  { label: 'Live Paan Counter Counter', src: livePaanStall, cat: 'Live Stalls' },
+  { label: 'Golden Gulab Jamun Dessert Tray', src: gulabJamunTray, cat: 'Food' },
 ]
 
 export default function GalleryPreview() {
+  const [lightbox, setLightbox] = useState(null)
   const { ref, inView } = useInView({ threshold: 0.06, triggerOnce: true })
+
+  // Lock background scroll when image lightbox is open
+  useLockBodyScroll(!!lightbox)
+
   return (
     <section className="py-20 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -69,11 +76,13 @@ export default function GalleryPreview() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.4, delay: i * 0.05 }}
+              onClick={() => setLightbox(item)}
               className={`group overflow-hidden cursor-pointer relative bg-neutral-900 ${item.wide ? 'col-span-2' : 'col-span-1'}`}
             >
               <img
                 src={item.src}
                 alt={item.label}
+                loading="lazy"
                 className="w-full h-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
               />
               {/* Hover overlay */}
@@ -91,6 +100,45 @@ export default function GalleryPreview() {
           ))}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6"
+            style={{ background: 'rgba(10,10,10,0.95)' }}
+            onClick={() => setLightbox(null)}
+          >
+            <button
+              className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center transition-all duration-200"
+              style={{ border: '1px solid rgba(255,255,255,0.18)', color: 'rgba(255,255,255,0.55)' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#FF5C2B'; e.currentTarget.style.color = '#FF5C2B' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.93 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.93 }}
+              className="max-w-3xl w-full overflow-hidden rounded-2xl bg-neutral-900 p-2"
+              onClick={e => e.stopPropagation()}
+            >
+              <div style={{ aspectRatio: '16/10' }} className="overflow-hidden rounded-xl">
+                <img src={lightbox.src} alt={lightbox.label} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex items-center justify-between mt-3 px-3 pb-2">
+                <p className="text-[0.88rem] font-semibold text-white" style={{ fontFamily: 'Inter, sans-serif' }}>{lightbox.label}</p>
+                <span className="text-[10px] tracking-widest uppercase text-[#FF5C2B]" style={{ fontFamily: 'Inter, sans-serif' }}>{lightbox.cat}</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

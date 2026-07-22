@@ -23,6 +23,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Prevent background scroll when modal/lightbox/popup is open */
+body.modal-open, html.modal-open {
+  overflow: hidden !important;
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
+}
+
 /* Global Font Override & Pairings */
 *, ::before, ::after {
   font-family: "Nunito", sans-serif !important;

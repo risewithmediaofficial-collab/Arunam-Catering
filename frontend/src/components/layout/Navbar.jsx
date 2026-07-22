@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, Phone, Search } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import useLockBodyScroll from '../../hooks/useLockBodyScroll'
 
 const navLinks = [
   { label: 'Home', path: '/' },
@@ -16,6 +17,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+
+  // Lock background scroll when mobile menu is open
+  useLockBodyScroll(menuOpen)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)

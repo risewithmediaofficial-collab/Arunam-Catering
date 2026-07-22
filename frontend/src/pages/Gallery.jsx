@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+import useLockBodyScroll from '../hooks/useLockBodyScroll'
 import PageHero from '../components/layout/PageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import {
@@ -46,6 +47,9 @@ const galleryItems = [
 export default function Gallery() {
   const [activecat, setActivecat] = useState('All')
   const [lightbox, setLightbox] = useState(null)
+
+  // Prevent background scroll when lightbox popup is active
+  useLockBodyScroll(!!lightbox)
 
   const filtered = activecat === 'All' ? galleryItems : galleryItems.filter(g => g.cat === activecat)
 
