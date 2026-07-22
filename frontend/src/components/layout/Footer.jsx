@@ -107,14 +107,15 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {[
-                { Icon: InstagramIcon, href: '#', label: 'Instagram' },
+                { Icon: InstagramIcon, href: 'https://www.instagram.com/arunam_catering?igsh=ZmdhMHpleDV3b29z', label: 'Instagram', external: true },
                 { Icon: FacebookIcon, href: '#', label: 'Facebook' },
                 { Icon: YoutubeIcon, href: '#', label: 'YouTube' },
-              ].map(({ Icon, href, label }) => (
+              ].map(({ Icon, href, label, external }) => (
                 <a
                   key={label}
                   href={href}
                   aria-label={label}
+                  {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
                   style={{ border: '1px solid #ECE5DB', color: '#7A7269' }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = '#FF5C2B'; e.currentTarget.style.color = '#FF5C2B' }}
