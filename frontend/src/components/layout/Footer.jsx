@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react'
+import { Phone, Mail, MapPin, MessageCircle, Lock } from 'lucide-react'
 
 const InstagramIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -220,14 +220,17 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div style={{ borderTop: '1px solid #ECE5DB' }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p
-            className="text-[11px] text-[#7A7269]/70"
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div
+            className="text-[11px] text-[#7A7269] flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-center sm:text-left"
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
-            © {new Date().getFullYear()} Arunam Catering. All rights reserved.
-          </p>
-          <div className="flex gap-5">
+            <span>© {new Date().getFullYear()} Arunam Catering. All rights reserved.</span>
+            <span className="hidden sm:inline text-[#ECE5DB]">•</span>
+            <span>Developed and Designed with <span className="font-semibold text-[#111]">Rise With Media</span></span>
+          </div>
+
+          <div className="flex items-center gap-4 flex-wrap justify-center">
             {[
               { label: 'Privacy Policy', path: '/privacy-policy' },
               { label: 'Terms & Conditions', path: '/terms' },
@@ -235,14 +238,19 @@ export default function Footer() {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-[11px] transition-colors duration-200 text-[#7A7269]/70"
+                className="text-[11px] transition-colors duration-200 text-[#7A7269]/80 hover:text-[#111]"
                 style={{ fontFamily: 'Inter, sans-serif' }}
-                onMouseEnter={e => e.currentTarget.style.color = '#111111'}
-                onMouseLeave={e => e.currentTarget.style.color = ''}
               >
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/admin"
+              className="flex items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold px-3 py-1.5 rounded-full border border-[#FF5C2B]/30 text-[#FF5C2B] hover:bg-[#FF5C2B] hover:text-white transition-all duration-200 shadow-xs"
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              <Lock size={11} /> Admin Dashboard
+            </Link>
           </div>
         </div>
       </div>
