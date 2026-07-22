@@ -34,7 +34,7 @@ export default function AdminLogin() {
       <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#FF5C2B]/5 blur-[120px]" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#FF5C2B]/5 blur-[120px]" />
 
-      <div className="w-full max-w-md admin-card bg-white p-8 md:p-10 shadow-xl relative z-10 border border-gray-200">
+      <div className="w-full max-w-md admin-card bg-white p-6 sm:p-8 md:p-10 shadow-xl relative z-10 border border-gray-200">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#FF5C2B]/10 text-[#FF5C2B] mb-4">

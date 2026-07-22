@@ -736,22 +736,22 @@ export default function BillForm() {
     <div className="space-y-8 bg-[#fcfbfa] pb-12">
       {/* Top Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-        <div className="flex items-center gap-4">
-          <Link to="/admin" className="p-2 bg-white hover:bg-gray-100 text-gray-500 hover:text-black rounded-lg border border-gray-200 transition-all">
-            <ArrowLeft className="w-5 h-5" />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link to="/admin" className="p-2 bg-white hover:bg-gray-100 text-gray-500 hover:text-black rounded-lg border border-gray-200 transition-all shrink-0">
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
               {isEditMode ? `Edit Invoice #${sno}` : 'New Manual Catering Bill'}
             </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
               Specify function plates, Stall counts, select packages, proceed to add menu items & save
             </p>
           </div>
         </div>
 
         {/* Excel Importer Trigger Button */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <input
             type="file"
             accept=".xlsx, .xls, .csv"
@@ -762,7 +762,7 @@ export default function BillForm() {
           <button
             type="button"
             onClick={triggerExcelFileInput}
-            className="admin-btn-secondary inline-flex items-center gap-2 cursor-pointer py-2.5 shadow-sm text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-50 border border-gray-300"
+            className="admin-btn-secondary inline-flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto py-2.5 shadow-sm text-xs font-bold uppercase tracking-wider bg-white hover:bg-gray-50 border border-gray-300"
           >
             <Upload className="w-4 h-4 text-[#FF5C2B]" /> Import Menu from Excel
           </button>

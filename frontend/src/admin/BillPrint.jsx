@@ -137,26 +137,26 @@ export default function BillPrint() {
   return (
     <div className="admin-body min-h-screen bg-[#f8fafc] py-8 px-4 md:px-8 print:p-0 print:bg-white">
       {/* Top Action Bar (Hidden on Print) */}
-      <div className="max-w-5xl mx-auto mb-6 bg-white border border-gray-200 p-4 rounded-xl flex items-center justify-between no-print shadow-sm">
+      <div className="max-w-5xl mx-auto mb-6 bg-white border border-gray-200 p-4 rounded-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 no-print shadow-sm">
         <Link
           to="/admin"
-          className="admin-btn-secondary inline-flex items-center gap-2 py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-gray-600 hover:text-black transition-colors"
+          className="admin-btn-secondary inline-flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-gray-600 hover:text-black transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
           <button
             onClick={handleDownloadPDF}
             disabled={isGeneratingPDF}
-            className="admin-btn-secondary inline-flex items-center gap-2 py-2.5 px-5 cursor-pointer text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-black transition-all"
+            className="admin-btn-secondary inline-flex items-center justify-center gap-2 py-2.5 px-5 cursor-pointer text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-black transition-all"
           >
             <Download className="w-4 h-4 text-[#FF5C2B]" />
             {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF File'}
           </button>
           <button
             onClick={handlePrint}
-            className="admin-btn-primary inline-flex items-center gap-2 py-2.5 px-6 cursor-pointer text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
+            className="admin-btn-primary inline-flex items-center justify-center gap-2 py-2.5 px-6 cursor-pointer text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all"
           >
             <Printer className="w-4 h-4" /> Print Invoice
           </button>

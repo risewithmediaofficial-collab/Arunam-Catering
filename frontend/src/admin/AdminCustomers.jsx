@@ -174,7 +174,7 @@ export default function AdminCustomers() {
 
         {/* Right 1 Column: Create/Edit Form */}
         <div className="lg:col-span-1">
-          <div className="admin-card p-6 bg-white border border-gray-200 sticky top-4">
+          <div className="admin-card p-4 sm:p-6 bg-white border border-gray-200 lg:sticky lg:top-4">
             <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
               <UserPlus className="w-5 h-5 text-[#FF5C2B]" />
               {editingId ? 'Edit Customer' : 'Add New Customer'}

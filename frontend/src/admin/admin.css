@@ -26,6 +26,7 @@
   border: 1px solid #eae5df;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   border-radius: 12px;
+  max-width: 100%;
 }
 
 /* Custom inputs for light mode form */
@@ -37,6 +38,9 @@
   padding: 0.625rem 0.88rem;
   transition: all 0.2s ease-in-out;
   outline: none;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-input:focus {
@@ -75,6 +79,23 @@
   background-color: #fcfbfa;
   border-color: #bfae9e;
   color: #1a1a1a;
+}
+
+/* Responsive Table Wrapper */
+.admin-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .admin-input {
+    font-size: 14px;
+    padding: 0.5rem 0.75rem;
+  }
+  .admin-card {
+    border-radius: 10px;
+  }
 }
 
 /* Print Specific Overrides */

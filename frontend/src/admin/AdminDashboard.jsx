@@ -56,17 +56,17 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       {/* Header Panel */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-wide text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-gray-800" style={{ fontFamily: 'Playfair Display, serif' }}>
             Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage, edit, and print customer catering orders</p>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage, edit, and print customer catering orders</p>
         </div>
         <Link
           to="/admin/bill/new"
-          className="admin-btn-primary flex items-center justify-center gap-2 cursor-pointer self-start md:self-auto"
+          className="admin-btn-primary flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto text-xs sm:text-sm py-2.5"
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
           Create Catering Bill
         </Link>
       </div>
