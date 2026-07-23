@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, MessageCircle, Clock, Send } from 'lucide-react'
+import { Phone, Mail, MapPin, MessageCircle, Clock, Send, Utensils } from 'lucide-react'
 import PageHero from '../components/layout/PageHero'
+import { TIFFIN_MENUS, LUNCH_MENUS, DINNER_MENUS, SMART_CHOICE_MENUS, CATEGORY_MENUS } from '../admin/presetMenus'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const eventTypes = [
   'Wedding','Reception','Engagement','Corporate Event',
   'Birthday Party','Baby Shower','Housewarming','Family Function','Other',
+]
+
+const MENU_CATEGORIES = [
+  { key: 'Breakfast', label: 'Breakfast / Tiffin', options: Object.keys(TIFFIN_MENUS) },
+  { key: 'Lunch', label: 'Lunch', options: Object.keys(LUNCH_MENUS) },
+  { key: 'Dinner', label: 'Dinner', options: Object.keys(DINNER_MENUS) },
+  { key: 'Smart Choice', label: 'Smart Choice Menus', options: Object.keys(SMART_CHOICE_MENUS) },
+  { key: 'Category Varieties', label: 'Sweets & Special Dishes', options: Object.keys(CATEGORY_MENUS) },
+  { key: 'Customizable', label: 'Customizable Menu', options: ['Custom Choice Menu'] },
 ]
 
 const inputCls = {
@@ -23,13 +34,45 @@ const inputCls = {
 }
 
 export default function Contact() {
-  const [form, setForm] = useState({ name:'', phone:'', email:'', guests:'', eventType:'', date:'', message:'' })
+  const [searchParams] = useSearchParams()
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    guests: '',
+    eventType: '',
+    date: '',
+    menuCategory: '',
+    menuPackage: '',
+    message: ''
+  })
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [focused, setFocused] = useState('')
 
-  const change = e => setForm({ ...form, [e.target.name]: e.target.value })
+  useEffect(() => {
+    const cat = searchParams.get('category')
+    const pkg = searchParams.get('package')
+    if (cat) {
+      const match = MENU_CATEGORIES.find(c => c.key.toLowerCase() === cat.toLowerCase() || c.label.toLowerCase().includes(cat.toLowerCase()))
+      const catKey = match ? match.key : 'Breakfast'
+      setForm(prev => ({
+        ...prev,
+        menuCategory: catKey,
+        menuPackage: pkg || ''
+      }))
+    }
+  }, [searchParams])
+
+  const change = e => {
+    const { name, value } = e.target
+    if (name === 'menuCategory') {
+      setForm(prev => ({ ...prev, menuCategory: value, menuPackage: '' }))
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }))
+    }
+  }
 
   const submit = async e => {
     e.preventDefault()
@@ -54,6 +97,10 @@ export default function Contact() {
     ...inputCls,
     borderColor: focused === name ? '#FF5C2B' : '#E6DDD2',
   })
+
+  // Get options for selected category
+  const selectedCategoryObj = MENU_CATEGORIES.find(c => c.key === form.menuCategory)
+  const availablePackages = selectedCategoryObj ? selectedCategoryObj.options : []
 
 
   return (
@@ -86,7 +133,8 @@ export default function Contact() {
 
               <div className="space-y-5">
                 {[
-                  { href: 'tel:+918148784305', Icon: Phone, label: 'Phone', value: '+91 81487 84305' },
+                  { href: 'tel:+918148784305', Icon: Phone, label: 'Primary Phone', value: '+91 81487 84305' },
+                  { href: 'tel:+919640708527', Icon: Phone, label: 'Chandrakala', value: '+91 96407 08527' },
                   { href: 'https://wa.me/918148784305', Icon: MessageCircle, label: 'WhatsApp', value: '+91 81487 84305', external: true },
                   { href: 'mailto:arunamcateringservice@gmail.com', Icon: Mail, label: 'Email', value: 'arunamcateringservice@gmail.com' },
                 ].map(({ href, Icon, label, value, external }) => (
@@ -244,6 +292,41 @@ export default function Contact() {
                         onFocus={() => setFocused('date')}
                         onBlur={() => setFocused('')}
                       />
+                    </div>
+
+                    {/* Menu Category Dropdown */}
+                    <div>
+                      <label htmlFor="menuCategory" className="block text-[9.5px] tracking-[0.22em] uppercase mb-1.5" style={{ color: '#6B6560', fontFamily: 'Inter, sans-serif' }}>
+                        Select Menu Category
+                      </label>
+                      <select
+                        id="menuCategory" name="menuCategory"
+                        value={form.menuCategory} onChange={change}
+                        style={{ ...fieldStyle('menuCategory'), appearance: 'none', cursor: 'pointer' }}
+                        onFocus={() => setFocused('menuCategory')}
+                        onBlur={() => setFocused('')}
+                      >
+                        <option value="">-- Choose Menu Category --</option>
+                        {MENU_CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+                      </select>
+                    </div>
+
+                    {/* Dependent Menu Package Dropdown */}
+                    <div>
+                      <label htmlFor="menuPackage" className="block text-[9.5px] tracking-[0.22em] uppercase mb-1.5" style={{ color: '#6B6560', fontFamily: 'Inter, sans-serif' }}>
+                        Select Menu Package {form.menuCategory && `(${form.menuCategory})`}
+                      </label>
+                      <select
+                        id="menuPackage" name="menuPackage"
+                        disabled={!form.menuCategory || availablePackages.length === 0}
+                        value={form.menuPackage} onChange={change}
+                        style={{ ...fieldStyle('menuPackage'), appearance: 'none', cursor: form.menuCategory ? 'pointer' : 'not-allowed', opacity: form.menuCategory ? 1 : 0.6 }}
+                        onFocus={() => setFocused('menuPackage')}
+                        onBlur={() => setFocused('')}
+                      >
+                        <option value="">{form.menuCategory ? '-- Select Specific Package --' : '-- Select Category First --'}</option>
+                        {availablePackages.map(pkg => <option key={pkg} value={pkg}>{pkg}</option>)}
+                      </select>
                     </div>
                   </div>
 

@@ -273,6 +273,8 @@ const enquirySchema = new mongoose.Schema(
     guests: String,
     eventType: String,
     date: String,
+    menuCategory: String,
+    menuPackage: String,
     message: String,
     status: { type: String, default: 'New' }, // New | Contacted | Closed
   },

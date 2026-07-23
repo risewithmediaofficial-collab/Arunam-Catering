@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
+import CallButtonFloat from './components/ui/CallButtonFloat'
 
 // Lazy load all pages for optimal code splitting & performance
 const Home = lazy(() => import('./pages/Home'))
@@ -91,6 +92,7 @@ function Layout() {
         </Routes>
       </Suspense>
       <Footer />
+      <CallButtonFloat />
       <WhatsAppFloat />
     </>
   )

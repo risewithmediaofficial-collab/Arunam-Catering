@@ -78,14 +78,25 @@ export default function Navbar() {
                 <Search size={18} />
               </button>
 
-              {/* Call Icon */}
-              <a
-                href="tel:+918148784305"
-                aria-label="Call Us"
-                className="text-[#111]/75 hover:text-[#FF5C2B] transition-colors p-1.5"
-              >
-                <Phone size={18} />
-              </a>
+              {/* Call Icon with quick popover option */}
+              <div className="relative group">
+                <a
+                  href="tel:+918148784305"
+                  aria-label="Call Us"
+                  className="text-[#111]/75 hover:text-[#FF5C2B] transition-colors p-1.5 flex items-center gap-1"
+                >
+                  <Phone size={18} />
+                </a>
+                <div className="absolute right-0 top-full mt-1 hidden group-hover:block bg-white rounded-xl shadow-xl border border-gray-100 p-3 min-w-[210px] z-50">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">Call Options</p>
+                  <a href="tel:+918148784305" className="block text-xs font-semibold text-gray-800 hover:text-[#FF5C2B] py-1 border-b border-gray-100">
+                    +91 81487 84305 <span className="text-[9px] text-gray-400 font-normal">(Primary)</span>
+                  </a>
+                  <a href="tel:+919640708527" className="block text-xs font-semibold text-gray-800 hover:text-[#FF5C2B] py-1 pt-1.5">
+                    +91 96407 08527 <span className="text-[9px] text-gray-400 font-normal">(Chandrakala)</span>
+                  </a>
+                </div>
+              </div>
 
               {/* Book Catering CTA */}
               <Link
@@ -135,16 +146,22 @@ export default function Navbar() {
                 )
               })}
             </nav>
-            <div className="flex flex-col gap-4 mt-2">
-              <a href="tel:+918148784305" className="flex items-center gap-3 text-sm text-[#111]/70 font-semibold py-2">
-                <div className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center text-[#FF5C2B]">
-                  <Phone size={14} />
+            <div className="flex flex-col gap-3 mt-2">
+              <a href="tel:+918148784305" className="flex items-center gap-3 text-xs text-[#111]/80 font-semibold py-1.5">
+                <div className="w-7 h-7 rounded-full bg-black/5 flex items-center justify-center text-[#FF5C2B]">
+                  <Phone size={13} />
                 </div>
-                <span>+91 81487 84305</span>
+                <span>+91 81487 84305 (Primary)</span>
+              </a>
+              <a href="tel:+919640708527" className="flex items-center gap-3 text-xs text-[#111]/80 font-semibold py-1.5">
+                <div className="w-7 h-7 rounded-full bg-black/5 flex items-center justify-center text-[#FF5C2B]">
+                  <Phone size={13} />
+                </div>
+                <span>+91 96407 08527 (Chandrakala)</span>
               </a>
               <Link
                 to="/contact"
-                className="block text-center text-[11px] tracking-[0.15em] uppercase font-bold py-3.5 rounded-full bg-[#FF5C2B] text-white hover:bg-[#E04618] shadow"
+                className="block text-center text-[11px] tracking-[0.15em] uppercase font-bold py-3.5 rounded-full bg-[#FF5C2B] text-white hover:bg-[#E04618] shadow mt-2"
               >
                 Book Catering
               </Link>

@@ -189,6 +189,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {[
                 { href: 'tel:+918148784305', Icon: Phone, text: '+91 81487 84305' },
+                { href: 'tel:+919640708527', Icon: Phone, text: '+91 96407 08527 (Chandrakala)' },
                 { href: 'https://wa.me/918148784305', Icon: MessageCircle, text: 'WhatsApp: +91 81487 84305', external: true },
                 { href: 'mailto:arunamcateringservice@gmail.com', Icon: Mail, text: 'arunamcateringservice@gmail.com' },
               ].map(({ href, Icon, text, external }) => (

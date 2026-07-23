@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Inbox, Trash2, Phone, Mail, Calendar, Users, MessageSquare, CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react';
+import { Inbox, Trash2, Phone, Mail, Calendar, Users, MessageSquare, CheckCircle, Clock, XCircle, RefreshCw, Utensils } from 'lucide-react';
 import './admin.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -167,6 +167,15 @@ export default function AdminEnquiries() {
                             </span>
                           )}
                         </div>
+
+                        {(enq.menuCategory || enq.menuPackage) && (
+                          <div className="flex items-center gap-2 pt-1">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded bg-orange-50 text-[#FF5C2B] border border-orange-200">
+                              <Utensils size={10} />
+                              {enq.menuCategory || 'Menu'}: <strong className="font-bold ml-1">{enq.menuPackage || 'Custom'}</strong>
+                            </span>
+                          </div>
+                        )}
 
                         {enq.message && (
                           <p className="text-xs text-gray-500 flex items-start gap-1.5 mt-1 max-w-xl">
