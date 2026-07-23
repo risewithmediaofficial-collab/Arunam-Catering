@@ -10,7 +10,7 @@ const values = [
   { title: 'Authenticity', desc: 'Traditional South Indian recipes passed down through generations.' },
   { title: 'Hygiene', desc: 'Highest food safety standards in every kitchen we operate.' },
   { title: 'Professionalism', desc: 'From planning to plating, executed with precision and care.' },
-  { title: 'Community', desc: 'Tamilnadu\'s own — rooted in local culture for 25+ years.' },
+  { title: 'Community', desc: 'Tamilnadu\'s own — rooted in local culture for 5+ years.' },
 ]
 
 const events = [
@@ -26,7 +26,7 @@ export default function About() {
     <main>
       <PageHero
         eyebrow="Our Story"
-        title="25 Years of Culinary Excellence"
+        title="5+ Years of Culinary Excellence"
         subtitle="A journey of passion, tradition, and exceptional service across Krishnagiri & Tamil Nadu."
         bgLabel="About Hero"
       />
@@ -51,7 +51,7 @@ export default function About() {
                   family operation, we have grown into one of Tamil Nadu's most trusted catering brands.
                 </p>
                 <p>
-                  With over 25 years of experience and 5,000+ weddings catered, we understand
+                  With over 5 years of experience and 100+ events catered, we understand
                   every event is unique. Our professional chefs, trained staff, and dedicated
                   coordinators ensure your celebration is nothing short of perfect.
                 </p>
@@ -116,8 +116,8 @@ export default function About() {
                 className="absolute bottom-0 left-0 md:-bottom-4 md:-left-4 p-5 text-center"
                 style={{ background: '#FF5C2B' }}
               >
-                <p className="text-2xl font-semibold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>25+</p>
-                <p className="text-[9px] tracking-[0.2em] uppercase mt-0.5 text-white/80">Years</p>
+                <p className="text-2xl font-semibold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>5+</p>
+                <p className="text-[9px] tracking-[0.2em] uppercase mt-0.5 text-white/80">Years Exp.</p>
               </div>
             </div>
           </div>
@@ -132,10 +132,10 @@ export default function About() {
             style={{ background: 'rgba(255,255,255,0.06)' }}
           >
             {[
-              { n: '25K+', l: 'Happy Families' },
-              { n: '3K+', l: 'Events Done' },
-              { n: '5K+', l: 'Weddings' },
-              { n: '50+', l: 'Expert Staff' },
+              { n: '100+', l: 'Events Catered' },
+              { n: '5+', l: 'Years Experience' },
+              { n: '300+', l: 'Min Guests' },
+              { n: '100%', l: 'Quality & Taste' },
               { n: '4.9★', l: 'Google Rating' },
             ].map(({ n, l }) => (
               <div key={l} className="py-8 text-center" style={{ background: '#181818' }}>

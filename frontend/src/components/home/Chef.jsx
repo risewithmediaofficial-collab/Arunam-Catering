@@ -66,8 +66,8 @@ export default function Chef() {
                   <Users size={18} />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#111]">25K+</h5>
-                  <p className="text-[10.5px] text-[#7A7269]">Happy Families</p>
+                  <h5 className="text-[14px] font-bold text-[#111]">100+</h5>
+                  <p className="text-[10.5px] text-[#7A7269]">Events Catered</p>
                 </div>
               </motion.div>
 
@@ -80,8 +80,8 @@ export default function Chef() {
                   <CheckCircle2 size={18} />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#111]">3K+</h5>
-                  <p className="text-[10.5px] text-[#7A7269]">Events Completed</p>
+                  <h5 className="text-[14px] font-bold text-[#111]">5+ Years</h5>
+                  <p className="text-[10.5px] text-[#7A7269]">Of Experience</p>
                 </div>
               </motion.div>
 
@@ -94,8 +94,8 @@ export default function Chef() {
                   <Users size={18} />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#111]">50+</h5>
-                  <p className="text-[10.5px] text-[#7A7269]">Expert Teams</p>
+                  <h5 className="text-[14px] font-bold text-[#111]">300+</h5>
+                  <p className="text-[10.5px] text-[#7A7269]">Min Guest Capacity</p>
                 </div>
               </motion.div>
 
@@ -108,8 +108,8 @@ export default function Chef() {
                   <Clock size={18} />
                 </div>
                 <div>
-                  <h5 className="text-[14px] font-bold text-[#111]">25+ Years</h5>
-                  <p className="text-[10.5px] text-[#7A7269]">Of Experience</p>
+                  <h5 className="text-[14px] font-bold text-[#111]">100%</h5>
+                  <p className="text-[10.5px] text-[#7A7269]">Quality & Taste</p>
                 </div>
               </motion.div>
             </div>

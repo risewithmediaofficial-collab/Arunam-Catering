@@ -30,10 +30,10 @@ export default function Testimonials() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { n: '3,333+', l: 'Google Reviews' },
-              { n: '4.9★', l: 'Average Rating' },
-              { n: '25K+', l: 'Happy Families' },
-              { n: '5,000+', l: 'Weddings Catered' },
+              { n: '100+', l: 'Events Catered' },
+              { n: '5+', l: 'Years Experience' },
+              { n: '300+', l: 'Min Guests' },
+              { n: '4.5★', l: 'Google Rating' },
             ].map(({ n, l }) => (
               <div key={l}>
                 <p className="text-[1.8rem] font-semibold text-white" style={{ fontFamily: 'Playfair Display, serif' }}>{n}</p>

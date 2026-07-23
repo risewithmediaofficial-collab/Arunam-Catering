@@ -41,7 +41,7 @@ export default function Testimonials() {
               <div className="flex justify-center gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#FF5C2B">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 ))}
               </div>
@@ -118,10 +118,10 @@ export default function Testimonials() {
           style={{ background: 'rgba(255,255,255,0.06)' }}
         >
           {[
-            { n: '3,333+', l: 'Google Reviews' },
-            { n: '4.9★', l: 'Average Rating' },
-            { n: '5,000+', l: 'Weddings Catered' },
-            { n: '25K+', l: 'Happy Families' },
+            { n: '100+', l: 'Events Catered' },
+            { n: '5+', l: 'Years Experience' },
+            { n: '300+', l: 'Min Guests' },
+            { n: '4.5★', l: 'Google Rating' },
           ].map(({ n, l }) => (
             <div key={l} className="px-6 py-6 text-center" style={{ background: '#181818' }}>
               <p

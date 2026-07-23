@@ -17,7 +17,7 @@ const services = [
     img: coupleDining,
     desc: 'Tamilnadu\'s most trusted wedding caterers. Authentic South Indian menus, elegant presentation, and flawless execution for your most important day.',
     highlights: ['South Indian multi-cuisine menus', 'Banana leaf & fine dining setups', 'Live cooking counters', 'Custom menu planning', '300–2000+ guests capacity', 'Experienced wedding team'],
-    stats: [{ n: '5,000+', l: 'Weddings' }, { n: '4.9★', l: 'Rating' }],
+    stats: [{ n: '100+', l: 'Events' }, { n: '4.9★', l: 'Rating' }],
     reverse: false,
   },
   {
@@ -27,7 +27,7 @@ const services = [
     img: guestsFeast,
     desc: 'Professional catering for corporate environments — from daily office meals to large-scale business events, delivered with punctuality and quality.',
     highlights: ['Office meetings & team lunches', 'Corporate event catering', 'Business celebrations', 'Veg and Non-Veg options', 'Customized quantity planning', 'On-time delivery guaranteed'],
-    stats: [{ n: '500+', l: 'Corp. Events' }, { n: '100%', l: 'On Time' }],
+    stats: [{ n: '100+', l: 'Events' }, { n: '100%', l: 'On Time' }],
     reverse: true,
   },
   {
@@ -37,7 +37,7 @@ const services = [
     img: welcomeDrinks,
     desc: 'Mark your engagement with authentic South Indian flavours. Comprehensive menu planning and professional coordination for your ceremony.',
     highlights: ['Traditional ceremony menus', 'Family function specialists', 'Professional coordination', 'Custom menu creation', 'Local Tamilnadu expertise', 'Smooth event management'],
-    stats: [{ n: '1,000+', l: 'Engagements' }, { n: '25+', l: 'Years' }],
+    stats: [{ n: '100+', l: 'Events' }, { n: '5+', l: 'Years Exp.' }],
     reverse: false,
   },
   {
@@ -47,7 +47,7 @@ const services = [
     img: bananaLeafSpread,
     desc: 'Customised menus and warm hospitality for baby showers, birthday parties, and every joyful milestone in between.',
     highlights: ['Themed menu options', 'Customized food stations', 'Dessert counters', 'Hygienic child-safe prep', 'Friendly serving staff', 'Flexible guest counts'],
-    stats: [{ n: '800+', l: 'Celebrations' }, { n: '5★', l: 'Service' }],
+    stats: [{ n: '100+', l: 'Events' }, { n: '5★', l: 'Service' }],
     reverse: true,
   },
 ]
