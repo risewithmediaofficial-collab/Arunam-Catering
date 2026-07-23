@@ -15,12 +15,15 @@ const DEFAULT_MENU_OPTIONS = {
 };
 
 const FUNCTION_TYPES = [
-  'Marriage',
+  'Engagement',
+  'Marriage / Wedding',
+  'Corporate Event',
   'Reception',
   'Birthday Party',
+  'Baby Shower',
+  'Ear Piercing',
+  'Puberty Ceremony',
   'Housewarming',
-  'Engagement Ceremony',
-  'Corporate Event',
   'Family Get-Together',
   'Other Custom Function'
 ];

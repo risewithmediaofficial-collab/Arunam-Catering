@@ -328,11 +328,17 @@ export default function Menu() {
                         className="w-full bg-[#FAF7F2] border border-[#E6DDD2] rounded-xl px-4 py-2.5 text-xs text-[#181818] focus:outline-none focus:border-[#FF5C2B]"
                         style={{ fontFamily: 'Inter, sans-serif' }}
                       >
-                        <option value="Wedding">Wedding</option>
-                        <option value="Reception">Reception</option>
                         <option value="Engagement">Engagement</option>
-                        <option value="Corporate Event">Corporate Event</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Corporate">Corporate</option>
+                        <option value="Reception">Reception</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Baby Shower">Baby Shower</option>
+                        <option value="Ear Piercing">Ear Piercing</option>
+                        <option value="Puberty">Puberty</option>
+                        <option value="Housewarming">Housewarming</option>
                         <option value="Family Function">Family Function</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
 

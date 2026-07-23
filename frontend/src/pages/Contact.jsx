@@ -8,8 +8,17 @@ import { TIFFIN_MENUS, LUNCH_MENUS, DINNER_MENUS, SMART_CHOICE_MENUS, CATEGORY_M
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 const eventTypes = [
-  'Wedding','Reception','Engagement','Corporate Event',
-  'Birthday Party','Baby Shower','Housewarming','Family Function','Other',
+  'Engagement',
+  'Wedding',
+  'Corporate',
+  'Reception',
+  'Birthday',
+  'Baby Shower',
+  'Ear Piercing',
+  'Puberty',
+  'Housewarming',
+  'Family Function',
+  'Other',
 ]
 
 const MENU_CATEGORIES = [
