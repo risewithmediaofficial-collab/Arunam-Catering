@@ -5,7 +5,7 @@ import { Phone, Mail, MapPin, MessageCircle, Clock, Send, Utensils } from 'lucid
 import PageHero from '../components/layout/PageHero'
 import { TIFFIN_MENUS, LUNCH_MENUS, DINNER_MENUS, SMART_CHOICE_MENUS, CATEGORY_MENUS } from '../admin/presetMenus'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+import { API_BASE_URL as API } from '../config/api'
 
 const eventTypes = [
   'Engagement',

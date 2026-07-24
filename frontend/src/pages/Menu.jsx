@@ -13,7 +13,7 @@ import {
 } from '../assets/images'
 import { TIFFIN_MENUS, LUNCH_MENUS, DINNER_MENUS, SMART_CHOICE_MENUS, CATEGORY_MENUS } from '../admin/presetMenus'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+import { API_BASE_URL as API } from '../config/api'
 
 const categoryCards = [
   {

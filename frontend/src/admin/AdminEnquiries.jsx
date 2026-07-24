@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Inbox, Trash2, Phone, Mail, Calendar, Users, MessageSquare, CheckCircle, Clock, XCircle, RefreshCw, Utensils } from 'lucide-react';
 import './admin.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import { API_BASE_URL as API } from '../config/api';
 
 const STATUS_CONFIG = {
   New:       { color: '#FF5C2B', bg: '#FFF3EF', icon: Clock },
